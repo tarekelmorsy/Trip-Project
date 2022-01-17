@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Android Project</string>
+    <string name="email">ايميل</string>
+    <string name="password">الرقم السري</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="name">الاسم</string>
+    <string name="sign_up">انشاء حساب</string>
+    <string name="have_an_account">هل لديك حساب؟</string>
+    <string name="go_login">سجل الدخول</string>
+    <string name="login_with">سجل الدخول عن طريق</string>
+    <string name="register">انشاء حساب</string>
+    <string name="create_account">هل تريد انشاء حساب؟</string>
 </resources>
