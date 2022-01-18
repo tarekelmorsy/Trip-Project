@@ -19,6 +19,9 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
+            android:name=".Registeration.LoginEmail"
+            android:exported="false" />
+        <activity
             android:name=".Registeration.SplashScreen"
             android:exported="true">
             <intent-filter>

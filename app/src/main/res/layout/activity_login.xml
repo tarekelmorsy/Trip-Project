@@ -7,7 +7,6 @@
 
     >
 
-
 <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -122,6 +121,7 @@
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
             android:src="@drawable/gmailicon"
+            android:id="@+id/img_gmail"
             />
 
         <ImageView

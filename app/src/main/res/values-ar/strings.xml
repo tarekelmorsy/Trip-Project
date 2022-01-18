@@ -11,4 +11,5 @@
     <string name="login_with">سجل الدخول عن طريق</string>
     <string name="register">انشاء حساب</string>
     <string name="create_account">هل تريد انشاء حساب؟</string>
+    <string name="confirm_password">تأكيد الرقم السري</string>
 </resources>
