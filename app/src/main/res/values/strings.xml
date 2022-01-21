@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Android Project</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="trip_name">Trip Name</string>
+    <string name="enter_trip_name">Enter Trip Name</string>
+    <string name="start_point">Start Point</string>
+    <string name="add_trip">Add Trip</string>
+    <string name="end_point">End Point</string>
+    <string name="trip_details">Trip Details</string>
+    <string name="noRepeat">No Repeat</string>
+    <string name="repeatDaily">Repeat Daily</string>
+    <string name="repeatWeekly">Repeat Weekly</string>
+    <string name="repeatMonthly">Repeat Monthly</string>
+    <string name="oneWay">One Way</string>
+    <string name="towWay">Two Way</string>
+    <string name="upComing">Up Coming</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_home2">Home2</string>
+    <string name="title_activity_test">Test</string>
+    <string name="update_trip">Update Trip</string>
+    <string name="cancel">Cancel</string>
+    <string name="canceled">Canceled</string>
 </resources>
