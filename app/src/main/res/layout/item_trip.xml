@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/main_container"
-    app:dragEdge="right"
+     app:dragEdge="right"
     app:mode="same_level"
     android:background="@drawable/bg_itme"
     android:layout_marginBottom="10dp"
@@ -144,14 +144,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:includeFontPadding="false"
+                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:text="iti trip"
+                android:gravity="center"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 app:autoSizeMaxTextSize="18sp"
-                app:autoSizeMinTextSize="9sp"
+                app:autoSizeMinTextSize="11sp"
                 app:autoSizeStepGranularity=".5sp"
                 app:autoSizeTextType="uniform" />
 
@@ -167,7 +167,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 app:autoSizeMaxTextSize="18sp"
-                app:autoSizeMinTextSize="9sp"
+                app:autoSizeMinTextSize="11sp"
                 app:autoSizeStepGranularity=".5sp"
                 app:autoSizeTextType="uniform" />
 
@@ -185,7 +185,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 app:autoSizeMaxTextSize="18sp"
-                app:autoSizeMinTextSize="9sp"
+                app:autoSizeMinTextSize="11sp"
                 app:autoSizeStepGranularity=".5sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -199,6 +199,7 @@
             android:layout_margin="20dp"
             android:layout_marginTop="20dp"
             android:weightSum="2"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -295,6 +296,74 @@
 
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/container4"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="50dp"
+            android:weightSum="3"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/ivSetNotes"
+            app:layout_constraintTop_toBottomOf="@+id/container3"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="0dp"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="@string/repeat"
+                android:textColor="@color/brown_grey"
+                android:textSize="15sp"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvSetRepeat"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                 android:layout_height="wrap_content"
+                android:text="one repeat"
+                 android:textSize="20sp"
+                 android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="11sp"
+                app:autoSizeStepGranularity=".5sp"
+                app:autoSizeTextType="uniform"
+                />
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="0dp"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:text="way"
+                android:textColor="@color/brown_grey"
+                android:textSize="15sp"
+                app:layout_constraintStart_toEndOf="@+id/tvDate"
+                app:layout_constraintTop_toBottomOf="@+id/container2" />
+
+            <TextView
+                android:id="@+id/tvSetWay"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                 android:layout_height="wrap_content"
+                android:text="one way"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                 android:gravity="center"
+                android:textAlignment="center"
+                 app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="11sp"
+                app:autoSizeStepGranularity=".5sp"
+                app:autoSizeTextType="uniform"
+                />
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -307,7 +376,7 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/container3">
+            app:layout_constraintTop_toBottomOf="@+id/container4">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipGroupp"
