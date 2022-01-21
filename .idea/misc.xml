@@ -15,14 +15,19 @@
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/drawable/ic_time.xml" value="0.228125" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/drawable/item_trip.xml" value="0.2222222222222222" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/activity_add_trip.xml" value="0.2" />
+        <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/activity_cancel.xml" value="0.158984375" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/activity_home.xml" value="0.1" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/activity_main2.xml" value="0.25" />
+        <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/activity_test.xml" value="0.16484375" />
+        <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/fragment_blank.xml" value="0.160546875" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/fragment_dashboard.xml" value="0.25" />
+        <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/fragment_history.xml" value="0.160546875" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/fragment_notifications.xml" value="0.12708333333333333" />
-        <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/item_trip.xml" value="0.176" />
+        <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/item_trip.xml" value="0.264" />
         <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/layout/tv_entity.xml" value="0.12708333333333333" />
+        <entry key="..\:/Users/El-Hoda/Desktop/iti3/android/Android project/app/src/main/res/menu/bottom_nav_menu.xml" value="0.16484375" />
       </map>
     </option>
   </component>

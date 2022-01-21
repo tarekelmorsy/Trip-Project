@@ -2,38 +2,17 @@ package com.example.androidproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
+import android.view.MenuItem;
 
-import com.example.androidproject.data.Trip;
-import com.example.androidproject.databinding.FragmentHomeBinding;
-import com.example.androidproject.ui.AddTripActivity;
-import com.example.androidproject.ui.ui.home.AddAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.example.androidproject.ui.ui.cancel.CancelFragment;
+import com.example.androidproject.ui.ui.upcoming.HomeFragment;
+import com.example.androidproject.ui.ui.history.HistoryFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipDrawable;
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
-    RecyclerView recyclerView;
-    AddAdapter addAdapter;
-    FloatingActionButton btAdd;
 
 
     @Override
@@ -41,42 +20,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerView = findViewById(R.id.recUpcoming2);
-        btAdd = findViewById(R.id.floatingActionButton2);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"), Trip.class).build();
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        //   Toast.makeText(MainActivity.this, options.getSnapshots().get(0).getTripName()+options.getSnapshots().get(1).getTripName(), Toast.LENGTH_SHORT).show();
-        if (!options.getSnapshots().isEmpty()) {
+        // as soon as the application opens the first
+        // fragment should be shown to the user
+        // in this case it is algorithm fragment
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+    }
 
-            Toast.makeText(MainActivity.this, options.getSnapshots().get(1).toString(), Toast.LENGTH_SHORT).show();
-
-
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            // By using switch we can easily get
+            // the selected fragment
+            // by using there id.
+            Fragment selectedFragment = null;
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    selectedFragment = new HomeFragment();
+                    break;
+                case R.id.navigation_cancel:
+                    selectedFragment = new CancelFragment();
+                    break;
+                case R.id.navigation_history:
+                    selectedFragment = new HistoryFragment();
+                    break;
+            }
+            // It will help to replace the
+            // one fragment to other.
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, selectedFragment)
+                    .commit();
+            return true;
         }
-        addAdapter = new AddAdapter(options);
-        recyclerView.setAdapter(addAdapter);
+    };
 
 
-        btAdd.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, AddTripActivity.class));
-
-        });
-
-
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        addAdapter.startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        addAdapter.stopListening();
-    }
 }
+

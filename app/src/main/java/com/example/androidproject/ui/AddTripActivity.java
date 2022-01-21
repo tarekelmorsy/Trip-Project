@@ -1,19 +1,14 @@
 package com.example.androidproject.ui;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -27,20 +22,15 @@ import android.widget.Toast;
 
 import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
-import com.google.android.gms.common.api.ApiException;
+import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -67,6 +57,7 @@ public class AddTripActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
         initialize();
+        AddAdapter.screen=1;
 
         Places.initialize(getApplicationContext(), Data.KEYMAP);
         String placeId = "INSERT_PLACE_ID_HERE";
@@ -77,8 +68,8 @@ public class AddTripActivity extends AppCompatActivity {
 
         way.setFocusable(false);
         repeat.setFocusable(false);
-        edStartPoint.setFocusable(false);
-        edStartPoint.setOnClickListener(new View.OnClickListener() {
+       // edStartPoint.setFocusable(false);
+        /*edStartPoint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -89,7 +80,7 @@ public class AddTripActivity extends AppCompatActivity {
                         , fieldList).build(AddTripActivity.this);
                 startActivityForResult(intent, 100);
             }
-        });
+        });*/
         wayList.add(getString(R.string.oneWay));
         wayList.add(getString(R.string.towWay));
         repeatList.add(getString(R.string.noRepeat));
@@ -158,7 +149,7 @@ public class AddTripActivity extends AppCompatActivity {
     private void insertData() {
         Map<String, Object> map = new HashMap<>();
         map.put("alarm", tvTime.getText().toString());
-        map.put("dat", tvDate.getText().toString());
+        map.put("date", tvDate.getText().toString());
         map.put("endPoint", edEndPoint.getText().toString());
         map.put("startPoint", edStartPoint.getText().toString());
         map.put("tripName", edTripName.getText().toString());
@@ -166,6 +157,7 @@ public class AddTripActivity extends AppCompatActivity {
         map.put("way", way.getText().toString());
         map.put("status", Data.UPCOMING);
         FirebaseDatabase.getInstance().getReference().child("trips").push().setValue(map)
+
                 .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> {
                     Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();

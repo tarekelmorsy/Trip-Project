@@ -1,13 +1,10 @@
 package com.example.androidproject.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Trip {
     private String tripName;
     private String startPoint;
     private String endPoint;
-    private String dat;
+    private String date;
     private String alarm;
     private String repeat;
     private String way;
@@ -57,12 +54,12 @@ public class Trip {
         this.endPoint = endPoint;
     }
 
-    public String getDat() {
-        return dat;
+    public String getDate() {
+        return date;
     }
 
-    public void setDat(String dat) {
-        this.dat = dat;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getAlarm() {
@@ -93,7 +90,7 @@ public class Trip {
         this.tripName = name;
         this.startPoint = start;
         this.endPoint = end;
-        this.dat = dat;
+        this.date = dat;
         this.alarm = alarm;
         this.repeat = repeat;
         this.way = way;

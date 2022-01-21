@@ -25,4 +25,9 @@
     <string name="canceled">Canceled</string>
     <string name="date">date</string>
     <string name="time">Time</string>
+    <string name="history">History</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="done">Done</string>
+    <string name="repeat">Repeat</string>
 </resources>
