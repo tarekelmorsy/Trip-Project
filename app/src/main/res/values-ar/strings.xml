@@ -12,4 +12,7 @@
     <string name="register">انشاء حساب</string>
     <string name="create_account">هل تريد انشاء حساب؟</string>
     <string name="confirm_password">تأكيد الرقم السري</string>
+    <string name="facebook_app_id">الرقم التعريفي للفيسبوك</string>
+    <string name="fb_login_protocol_scheme">برتوكول تسجيل الدخول</string>
+    <string name="please_verify_your_email_to_login">تحقق من اميلك لتسجيل الدخول</string>
 </resources>

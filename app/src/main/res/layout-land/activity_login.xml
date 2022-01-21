@@ -94,61 +94,70 @@
         android:layout_marginTop="@dimen/_10sdp"
         />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login_with"
-        android:id="@+id/tv_logiwith"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bt_login"
-        android:layout_gravity="center"
-        android:textSize="@dimen/_14sdp"
-        android:layout_marginBottom="@dimen/_15sdp"
-        android:textColor="#38493E"
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/login_with"-->
+<!--        android:id="@+id/tv_logiwith"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/bt_login"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:textSize="@dimen/_14sdp"-->
+<!--        android:layout_marginBottom="@dimen/_15sdp"-->
+<!--        android:textColor="#38493E"-->
 
-        />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img_social_login"
-        android:layout_gravity="center_horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_10sdp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_logiwith"
-        >
+<!--        />-->
 
 
-        <ImageView
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:src="@drawable/gmailicon"
-            />
+    <com.facebook.login.widget.LoginButton
+    android:id="@+id/login_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="10dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/bt_login"
 
-        <ImageView
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:src="@drawable/facebookicon"
-            />
-        <ImageView
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:src="@drawable/twittericon"
-            />
+    android:layout_marginBottom="30dp" />
 
 
-    </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/img_social_login"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:layout_marginTop="@dimen/_10sdp"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/login_button"-->
+<!--        >-->
+
+
+<!--        <ImageView-->
+<!--            android:layout_width="@dimen/_20sdp"-->
+<!--            android:layout_height="@dimen/_20sdp"-->
+<!--            android:src="@drawable/gmailicon"-->
+<!--            />-->
+
+
+<!--        <ImageView-->
+<!--            android:layout_width="@dimen/_20sdp"-->
+<!--            android:layout_height="@dimen/_20sdp"-->
+<!--            android:layout_marginStart="@dimen/_10sdp"-->
+<!--            android:src="@drawable/twittericon"-->
+<!--            />-->
+
+
+<!--    </LinearLayout>-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create_account"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_social_login"
+        app:layout_constraintTop_toBottomOf="@+id/login_button"
         android:id="@+id/tv_signup"
         android:layout_gravity="center"
         android:textSize="@dimen/_14sdp"

@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/main_container"
+    app:dragEdge="right"
+    app:mode="same_level"
+    android:background="@drawable/bg_itme"
+    android:layout_marginBottom="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:gravity="center|right"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_icon"
+            android:padding="5dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_delete" />
+        <ImageView
+            android:id="@+id/ivEdit"
+            android:background="@drawable/bg_icon"
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_edit" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_itme"
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:weightSum="3"
+    android:id="@+id/container1"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvStatus"
+    android:layout_marginTop="10dp"
+    android:layout_marginEnd="50dp"
+
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="@string/trip_name"
+        android:textColor="@color/brown_grey"
+        android:textSize="15sp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+         android:text="@string/start_point"
+        android:textColor="@color/brown_grey"
+        android:textSize="15sp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+         />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+          android:text="@string/end_point"
+        android:textColor="@color/brown_grey"
+        android:textSize="15sp"
+        android:gravity="center" />
+
+
+</LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/ivNotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="88dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_list" />
+
+        <ImageView
+            android:id="@+id/ivSetNotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="124dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_set_notes_add_24" />
+
+        <LinearLayout
+            android:id="@+id/container2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:weightSum="3"
+            android:layout_marginEnd="50dp"
+            app:layout_constraintEnd_toEndOf="@+id/ivNotes"
+            app:layout_constraintEnd_toStartOf="@+id/ivNotes"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/container1">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txvTripName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="iti trip"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="9sp"
+                app:autoSizeStepGranularity=".5sp"
+                app:autoSizeTextType="uniform" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txvEndPoint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="iti trip"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="9sp"
+                app:autoSizeStepGranularity=".5sp"
+                app:autoSizeTextType="uniform" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txvStartPointt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxWidth="110dp"
+                android:maxLines="1"
+                android:text="iti trip"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="9sp"
+                app:autoSizeStepGranularity=".5sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintHorizontal_bias="0.5"
+
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="20dp"
+            android:layout_marginTop="20dp"
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            >
+
+            <TextView
+                android:id="@+id/btStart"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_bottun"
+                android:text="Start"
+                android:textSize="20sp"
+                android:padding="8dp"
+                android:gravity="center"
+                android:textColor="#ffff"
+                />
+            <TextView
+                android:id="@+id/btCancel"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_bottun_cancel"
+                android:text="@string/cancel"
+                android:textSize="20sp"
+                android:layout_marginStart="20dp"
+                android:padding="8dp"
+                android:gravity="center"
+                android:textColor="#ffff"
+                />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/container3"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="50dp"
+            android:weightSum="3"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/ivSetNotes"
+            app:layout_constraintTop_toBottomOf="@+id/container2"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="0dp"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                 android:text="@string/date"
+                android:textColor="@color/brown_grey"
+                android:textSize="15sp"
+
+                  />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                 android:text="1\\1\\2020"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                 />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="0dp"
+                android:layout_weight=".5"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                 android:text="@string/time"
+                android:textColor="@color/brown_grey"
+                android:textSize="15sp"
+                app:layout_constraintStart_toEndOf="@+id/tvDate"
+                app:layout_constraintTop_toBottomOf="@+id/container2" />
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                 android:text="20:40"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                  />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="2dp"
+            android:background="@drawable/bg_notes"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/container3">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.chauthai.swipereveallayout.SwipeRevealLayout>
