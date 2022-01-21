@@ -11,4 +11,8 @@
     <string name="register">Register</string>
     <string name="create_account">Create Account?</string>
     <string name="confirm_password">confirm password</string>
+    <string name="facebook_app_id">518920196231822</string>
+    <string name="fb_login_protocol_scheme">fb518920196231822</string>
+    <string name="please_verify_your_email_to_login">please verify your email to login</string>
+
 </resources>

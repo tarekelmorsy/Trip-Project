@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/_160sdp"
-            android:id="@+id/img_logo_email"
+            android:id="@+id/img_logo_facebook"
             android:layout_gravity="center"
             android:src="@drawable/logo3"
             android:layout_marginTop="@dimen/_50sdp"
@@ -34,8 +34,8 @@
             android:layout_marginEnd="@dimen/_30sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_logo_email"
-            android:id="@+id/tf_email_email"
+            app:layout_constraintTop_toBottomOf="@+id/img_logo_facebook"
+            android:id="@+id/tf_email_facebook"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -46,7 +46,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
 
-                android:id="@+id/et_login_email" />
+                android:id="@+id/et_login_twitter" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -56,11 +56,11 @@
             android:layout_marginEnd="@dimen/_30sdp"
             android:layout_gravity="center"
             app:passwordToggleEnabled="true"
-            android:id="@+id/tf_password_email"
+            android:id="@+id/tf_password_facebook"
             android:layout_marginTop="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tf_email_email"
+            app:layout_constraintTop_toBottomOf="@+id/tf_email_facebook"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -70,7 +70,7 @@
                 android:inputType="textPassword"
 
 
-                android:id="@+id/et_login_password_email" />
+                android:id="@+id/et_login_password_facebook" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -80,11 +80,11 @@
             android:layout_marginEnd="@dimen/_30sdp"
             android:layout_gravity="center"
             app:passwordToggleEnabled="true"
-            android:id="@+id/tf_confirmpassword_email"
+            android:id="@+id/tf_confirmpassword_facebook"
             android:layout_marginTop="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tf_password_email"
+            app:layout_constraintTop_toBottomOf="@+id/tf_password_facebook"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -94,7 +94,7 @@
                 android:inputType="textPassword"
 
 
-                android:id="@+id/et_login_conifirmpassword_email" />
+                android:id="@+id/et_login_conifirmpassword_facebook" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -107,7 +107,7 @@
             android:id="@+id/bt_login_email"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tf_confirmpassword_email"
+            app:layout_constraintTop_toBottomOf="@+id/tf_confirmpassword_facebook"
             android:layout_gravity="center"
             app:cornerRadius="@dimen/_10sdp"
             android:inputType="textFilter"
@@ -115,9 +115,6 @@
             />
 
 
-
-
-/>
 
 
 

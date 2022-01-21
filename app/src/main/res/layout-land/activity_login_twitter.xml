@@ -2,26 +2,30 @@
 
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_160sdp"
-            android:id="@+id/img_logo_email"
-            android:layout_gravity="center"
-            android:src="@drawable/logo3"
-            android:layout_marginTop="@dimen/_50sdp"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/tv_login_title_twitter"
+            android:text="@string/login"
+            android:fontFamily="cursive"
+            android:textSize="@dimen/_22sdp"
+            android:textColor="#FD6D33"
+            android:layout_marginTop="@dimen/_40sdp"
+
             />
 
 
@@ -30,12 +34,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/_30sdp"
-            android:layout_marginEnd="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_130sdp"
+            android:layout_marginEnd="@dimen/_130sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_logo_email"
-            android:id="@+id/tf_email_email"
+            app:layout_constraintTop_toBottomOf="@+id/tv_login_title_twitter"
+            android:id="@+id/tf_email_twitter"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -46,21 +50,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
 
-                android:id="@+id/et_login_email" />
+                android:id="@+id/et_login_email_twitter" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_30sdp"
-            android:layout_marginEnd="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_130sdp"
+            android:layout_marginEnd="@dimen/_130sdp"
             android:layout_gravity="center"
             app:passwordToggleEnabled="true"
-            android:id="@+id/tf_password_email"
+            android:id="@+id/tf_password_twitter"
             android:layout_marginTop="@dimen/_10sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tf_email_email"
+            app:layout_constraintTop_toBottomOf="@+id/tf_email_twitter"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -69,55 +73,27 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
 
-
-                android:id="@+id/et_login_password_email" />
+                android:id="@+id/et_login_password_twitter" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_30sdp"
-            android:layout_marginEnd="@dimen/_30sdp"
-            android:layout_gravity="center"
-            app:passwordToggleEnabled="true"
-            android:id="@+id/tf_confirmpassword_email"
-            android:layout_marginTop="@dimen/_10sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tf_password_email"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Confirm Password"
-                android:inputType="textPassword"
-
-
-                android:id="@+id/et_login_conifirmpassword_email" />
-        </com.google.android.material.textfield.TextInputLayout>
-
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_60sdp"
-            android:layout_marginEnd="@dimen/_60sdp"
+
+            android:layout_marginStart="@dimen/_200sdp"
+            android:layout_marginEnd="@dimen/_200sdp"
             android:text="@string/login"
-            android:id="@+id/bt_login_email"
+            android:id="@+id/bt_login_twitter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tf_confirmpassword_email"
+            app:layout_constraintTop_toBottomOf="@+id/tf_password_twitter"
             android:layout_gravity="center"
             app:cornerRadius="@dimen/_10sdp"
+
             android:inputType="textFilter"
             android:layout_marginTop="@dimen/_25sdp"
             />
 
-
-
-
-/>
 
 
 
