@@ -23,4 +23,6 @@
     <string name="update_trip">Update Trip</string>
     <string name="cancel">Cancel</string>
     <string name="canceled">Canceled</string>
+    <string name="date">date</string>
+    <string name="time">Time</string>
 </resources>
