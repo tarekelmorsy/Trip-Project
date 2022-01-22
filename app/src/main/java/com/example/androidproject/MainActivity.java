@@ -1,5 +1,6 @@
 package com.example.androidproject;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
-
+        
         // as soon as the application opens the first
         // fragment should be shown to the user
         // in this case it is algorithm fragment

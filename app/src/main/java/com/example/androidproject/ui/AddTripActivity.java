@@ -166,6 +166,25 @@ public class AddTripActivity extends AppCompatActivity {
 
     }
 
+    private void handleError(){
+        if(edEndPoint.getText().toString()==""){
+            edEndPoint.setError("please enter End Point");
+
+        }else if(edTripName.getText().toString()==""){
+            edTripName.setError("please enter Trip Name");
+
+        }else if(edStartPoint.getText().toString()==""){
+            edEndPoint.setError("please enter Start Point");
+
+        }else if(tvDate.getText().toString()==""){
+            tvDate.setError("please enter Date");
+
+        }else if(tvTime.getText().toString()==""){
+            tvTime.setError("please enter Date");
+
+        }
+
+    }
     private void clearAll() {
 
         edEndPoint.setText("");
