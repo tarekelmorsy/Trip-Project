@@ -8,10 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-
-    <color name="greyish_brown">#4a4848</color>
+     <color name="greyish_brown">#4a4848</color>
     <color name="brown_grey">#9c9c9c</color>
     <color name="greyish_two">#b4afaf</color>
     <color name="very_light_pink">#f3f2f2</color>
     <color name="text_color">#5044b8</color>
+
 </resources>

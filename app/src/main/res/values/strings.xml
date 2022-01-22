@@ -1,5 +1,36 @@
 <resources>
     <string name="app_name">Android Project</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="trip_name">Trip Name</string>
+    <string name="enter_trip_name">Enter Trip Name</string>
+    <string name="start_point">Start Point</string>
+    <string name="add_trip">Add Trip</string>
+    <string name="end_point">End Point</string>
+    <string name="trip_details">Trip Details</string>
+    <string name="noRepeat">No Repeat</string>
+    <string name="repeatDaily">Repeat Daily</string>
+    <string name="repeatWeekly">Repeat Weekly</string>
+    <string name="repeatMonthly">Repeat Monthly</string>
+    <string name="oneWay">One Way</string>
+    <string name="towWay">Two Way</string>
+    <string name="upComing">Up Coming</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_home2">Home2</string>
+    <string name="title_activity_test">Test</string>
+    <string name="update_trip">Update Trip</string>
+    <string name="cancel">Cancel</string>
+    <string name="canceled">Canceled</string>
+    <string name="date">date</string>
+    <string name="time">Time</string>
+    <string name="history">History</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="done">Done</string>
+    <string name="repeat">Repeat</string>
+    <string name="app_name">Android Project</string>
     <string name="email">email</string>
     <string name="password">password</string>
     <string name="login">Login</string>
@@ -11,32 +42,4 @@
     <string name="register">Register</string>
     <string name="create_account">Create Account?</string>
     <string name="confirm_password">confirm password</string>
-    <string name="facebook_app_id">518920196231822</string>
-    <string name="fb_login_protocol_scheme">fb518920196231822</string>
-    <string name="please_verify_your_email_to_login">please verify your email to login</string>
-    <string name="title_activity_main" translatable="false">MainActivity</string>
-    <string name="title_home" translatable="false">Home</string>
-    <string name="title_dashboard" translatable="false">Dashboard</string>
-    <string name="title_notifications" translatable="false">Notifications</string>
-    <string name="trip_name" translatable="false">Trip Name</string>
-    <string name="enter_trip_name" translatable="false">Enter Trip Name</string>
-    <string name="start_point" translatable="false">Start Point</string>
-    <string name="add_trip" translatable="false">Add Trip</string>
-    <string name="end_point" translatable="false">End Point</string>
-    <string name="trip_details" translatable="false">Trip Details</string>
-    <string name="noRepeat" translatable="false">No Repeat</string>
-    <string name="repeatDaily" translatable="false">Repeat Daily</string>
-    <string name="repeatWeekly" translatable="false">Repeat Weekly</string>
-    <string name="repeatMonthly" translatable="false">Repeat Monthly</string>
-    <string name="oneWay" translatable="false">One Way</string>
-    <string name="towWay" translatable="false">Two Way</string>
-    <string name="upComing" translatable="false">Up Coming</string>
-    <string name="title_activity_maps" translatable="false">MapsActivity</string>
-    <string name="title_activity_home2" translatable="false">Home2</string>
-    <string name="title_activity_test" translatable="false">Test</string>
-    <string name="update_trip" translatable="false">Update Trip</string>
-    <string name="cancel" translatable="false">Cancel</string>
-    <string name="canceled" translatable="false">Canceled</string>
-    <string name="date" translatable="false">date</string>
-    <string name="time" translatable="false">Time</string>
 </resources>
