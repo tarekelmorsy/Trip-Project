@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -29,6 +32,8 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -52,11 +57,14 @@ public class AddTripActivity extends AppCompatActivity {
     public static ArrayList<String> wayList;
     public static DatePickerDialog.OnDateSetListener listenerDate;
 
+final String TAG="AddTripActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
         initialize();
+        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
+        //Log.i(TAG, "onCreate: uidddd"+user.getUid());
         AddAdapter.screen=1;
 
         Places.initialize(getApplicationContext(), Data.KEYMAP);
@@ -147,7 +155,28 @@ public class AddTripActivity extends AppCompatActivity {
     }
 
     private void insertData() {
+
+        //Log.i(TAG, "onCreate: uid= "+user.getUid());// for email data user
+
+        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
+        SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
+
+        String storedPreference = preferences.getString("x", "null");
+        Log.i(TAG, "onCreate: token= "+storedPreference);
+
+
+
+        //
         Map<String, Object> map = new HashMap<>();
+//        if(user!=null ){
+//            map.put("UID",user.getUid());
+//
+//        }
+//        else if(!storedPreference.equals("null")){
+//            map.put("UID",storedPreference);
+//        }
+
+        ///***************************************
         map.put("alarm", tvTime.getText().toString());
         map.put("date", tvDate.getText().toString());
         map.put("endPoint", edEndPoint.getText().toString());
@@ -156,7 +185,7 @@ public class AddTripActivity extends AppCompatActivity {
         map.put("repeat", repeat.getText().toString());
         map.put("way", way.getText().toString());
         map.put("status", Data.UPCOMING);
-        FirebaseDatabase.getInstance().getReference().child("trips").push().setValue(map)
+        FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
 
                 .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> {

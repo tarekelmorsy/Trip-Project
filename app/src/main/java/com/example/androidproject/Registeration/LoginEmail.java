@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.androidproject.R;
+import com.example.androidproject.data.Data;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,7 +26,6 @@ public class LoginEmail extends AppCompatActivity {
     TextInputEditText et_email, et_password, et_ConfirmPass;
     final String TAG = "LoginEmail";
 
-    FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
@@ -33,7 +33,7 @@ public class LoginEmail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_email);
         init();
-        firebaseAuth = FirebaseAuth.getInstance();
+        Data.FIREBASEAUTH = FirebaseAuth.getInstance();
         btLoginEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,11 +73,11 @@ public class LoginEmail extends AppCompatActivity {
 
         if (confirmPassword.equals(password)) {
 
-            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            Data.FIREBASEAUTH.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        FirebaseUser user=firebaseAuth.getCurrentUser();
+                        FirebaseUser user=Data.FIREBASEAUTH.getCurrentUser();
                         user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.TestActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.data.Data;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -47,14 +48,13 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private FirebaseAuth.AuthStateListener authStateListener;
     private AccessTokenTracker tracker;
-    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
-        firebaseAuth = FirebaseAuth.getInstance();
+        Data.FIREBASEAUTH = FirebaseAuth.getInstance();
         //
 //        tvSignUp.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -114,18 +114,17 @@ public class LoginActivity extends AppCompatActivity {
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
                 if (currentAccessToken == null) {
                     Toast.makeText(LoginActivity.this, "there is  no user ", Toast.LENGTH_SHORT).show();
-                    firebaseAuth.signOut();
+                    Data.FIREBASEAUTH.signOut();
 
 
                 } else {
 
-                    SharedPreferences preferences = getSharedPreferences("mytoken", Context.MODE_PRIVATE);
-                    preferences.edit().putString("accessToken", String.valueOf(currentAccessToken.getToken())).apply();
-                    Log.i(TAG, "onCurrentAccessTokenChanged: " + currentAccessToken);
+                    SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
+                    preferences.edit().putString("x", currentAccessToken.getToken()).apply();
+                    Log.i(TAG, "onCurrentAccessTokenChanged: " + currentAccessToken.getToken());
                     Toast.makeText(LoginActivity.this, "there is user token = " + currentAccessToken.getToken(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);//****
                     startActivity(intent);
-
 
                 }
 
@@ -161,17 +160,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 // App code
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                SharedPreferences preferences = getSharedPreferences("mytoken2", Context.MODE_PRIVATE);
 
-                preferences.edit().putString("accessToken2", String.valueOf((AccessToken)loginResult.getAccessToken())).apply();
-              //  Toast.makeText(LoginActivity.this,  String.valueOf((AccessToken)loginResult.getAccessToken()), Toast.LENGTH_LONG).show();
-
-//                   Log.i(TAG, "onCurrentAccessTokenChanged: " + currentAccessToken);
-                handleFacebookAccessToken(loginResult.getAccessToken());
+// ]                  Log.i(TAG, "onCurrentAccessTokenChanged: " + currentAccessToken);
+               handleFacebookAccessToken(loginResult.getAccessToken());
                 Toast.makeText(LoginActivity.this, "successful login ", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);//**
                 startActivity(intent);
-
             }
 
             @Override
@@ -199,15 +193,15 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        FirebaseUser currentUser = Data.FIREBASEAUTH.getCurrentUser();
         updateUI(currentUser);
-        if((firebaseAuth.getCurrentUser())==null)
+        if((Data.FIREBASEAUTH.getCurrentUser())==null)
             Toast.makeText(LoginActivity.this, "not exist ", Toast.LENGTH_SHORT).show();
 
         else
             Toast.makeText(LoginActivity.this, "logined user"+currentUser.getEmail(), Toast.LENGTH_SHORT).show();
 
-        firebaseAuth.addAuthStateListener(authStateListener);
+        Data.FIREBASEAUTH.addAuthStateListener(authStateListener);
 
         // Check if user is signed in (non-null) and update UI accordingly.
 
@@ -217,7 +211,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (authStateListener != null) {
-            firebaseAuth.removeAuthStateListener(authStateListener);
+            Data.FIREBASEAUTH.removeAuthStateListener(authStateListener);
 
 
         }
@@ -229,14 +223,14 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        firebaseAuth.signInWithCredential(credential)
+        Data.FIREBASEAUTH.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
+                            FirebaseUser user = Data.FIREBASEAUTH.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "user account is" + user, Toast.LENGTH_SHORT).show();
                             updateUI(user);
                         } else {
@@ -265,25 +259,11 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
 
 
-            Toast.makeText(this, "user is " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
-
-
-            if (user.getPhotoUrl() != null) {
-
-                String photoUrl = user.getPhotoUrl().toString();
-                Toast.makeText(this, "image url= " + photoUrl, Toast.LENGTH_SHORT).show();
-                // photoUrl=photoUrl+"?type=large";
-                //Picasso.get.load(photoUrl).into(myimageview);
-            }
+            Toast.makeText(this, "user is " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
 
       }
-//        else {
-////textview.setText("");
-//            //myimgview.setImageResource(R.id.pictures);
-//
-//
-//        }
+
     }
 
 
@@ -295,13 +275,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
         } else {
-            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            Data.FIREBASEAUTH.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        FirebaseUser user = Data.FIREBASEAUTH.getCurrentUser();
                         if (!user.isEmailVerified()) {
-                            Toast.makeText(LoginActivity.this, "please verify your account " + firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "please verify your account " + Data.FIREBASEAUTH.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
 
                         } else {
 
@@ -328,7 +308,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void signOut() {// for email
 
-        firebaseAuth.signOut();
+        Data.FIREBASEAUTH.signOut();
 
     }
 
