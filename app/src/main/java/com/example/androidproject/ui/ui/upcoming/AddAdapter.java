@@ -41,14 +41,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewHolder> {
     int i = 0;
     public static int screen=1;
     private ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
+    public ArrayList<String> trips=new ArrayList<>();
 
     /**
      * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
@@ -85,6 +88,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         holder.tvSetWay.setText(trip.getWay());
 
 
+        trips.add(trip.getDate());
+
         if (trip.getStatus().equals(Data.UPCOMING)) {
             holder.tvStatus.setText(R.string.upComing);
          } else if (trip.getStatus().equals(Data.CANCEL)) {
@@ -93,9 +98,6 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         }else   if (trip.getStatus().equals(Data.DONE)) {
             holder.tvStatus.setText(R.string.done);
             holder.btCancel.setVisibility(View.GONE);
-
-
-
         }
         holder.btCancel.setOnClickListener(v -> {
 
@@ -136,6 +138,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
         holder.ivNotes.setOnClickListener(v -> {
             // Toast.makeText(v.getContext(), "position: "+position, Toast.LENGTH_SHORT).show();
+            Toast.makeText(holder.btCancel.getContext(), trips.size(), Toast.LENGTH_SHORT).show();
 
 
             if (i == 1) {
@@ -146,6 +149,9 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                 i = 1;
             }
         });
+
+
+
 
 
         holder.ivEdit.setOnClickListener(v -> {

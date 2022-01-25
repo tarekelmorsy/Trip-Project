@@ -9,11 +9,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.androidproject.ui.ui.cancel.CancelFragment;
-import com.example.androidproject.ui.ui.upcoming.HomeFragment;
+import com.example.androidproject.ui.ui.upcoming.UpcomingFragment;
 import com.example.androidproject.ui.ui.history.HistoryFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity   {
 
 
     @Override
@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         // as soon as the application opens the first
         // fragment should be shown to the user
         // in this case it is algorithm fragment
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpcomingFragment()).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    selectedFragment = new HomeFragment();
+                    selectedFragment = new UpcomingFragment();
                     break;
                 case R.id.navigation_cancel:
                     selectedFragment = new CancelFragment();
