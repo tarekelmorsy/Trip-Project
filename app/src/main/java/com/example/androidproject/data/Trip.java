@@ -11,6 +11,9 @@ public class Trip {
     private String notes;
     private String status;
 
+
+
+
     public String getStatus() {
         return status;
     }

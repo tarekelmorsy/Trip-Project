@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,17 +40,27 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewHolder> {
     int i = 0;
+ static ArrayList<String> tripDate= new ArrayList<>();
+    static ArrayList<String> tripHour= new ArrayList<>();
+    static ArrayList<String> tripStatus= new ArrayList<>();
+
+
     public static int screen=1;
+    FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+    FirebaseUser user;
     private ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
     /**
@@ -71,9 +84,13 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
     @SuppressLint("SetTextI18n")
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") final int position, @NonNull Trip trip) {
-        viewBinderHelper.setOpenOnlyOne(true);
+
+            viewBinderHelper.setOpenOnlyOne(true);
         viewBinderHelper.bind(holder.swipeRefreshLayout, String.valueOf(trip.getTripName()));
         viewBinderHelper.closeLayout(trip.getTripName());
+        user= firebaseAuth.getCurrentUser();
+
+//        if(trip.getUID().equals(user.getUid())) {
 
         holder.txvTripNam.setText(trip.getTripName());
         holder.txvEndPoint.setText(trip.getEndPoint());
@@ -84,22 +101,41 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         holder.tvSeRepeat.setText((trip.getRepeat()));
         holder.tvSetWay.setText(trip.getWay());
 
-
         if (trip.getStatus().equals(Data.UPCOMING)) {
             holder.tvStatus.setText(R.string.upComing);
-         } else if (trip.getStatus().equals(Data.CANCEL)) {
+        } else if (trip.getStatus().equals(Data.CANCEL)) {
             holder.tvStatus.setText(R.string.canceled);
             holder.btCancel.setVisibility(View.GONE);
-        }else   if (trip.getStatus().equals(Data.DONE)) {
+        } else if (trip.getStatus().equals(Data.DONE)) {
             holder.tvStatus.setText(R.string.done);
             holder.btCancel.setVisibility(View.GONE);
 
 
-
         }
+
+        if (trip.getStatus().equals(1)){
+
+
+       }
+
+        tripDate.add(position,trip.getDate());
+        tripHour.add(position,trip.getAlarm());
+        tripStatus.add(position,trip.getStatus());
+
+
+        Toast.makeText(holder.tvTime.getContext(),""+tripDate.size(), Toast.LENGTH_SHORT).show();
+
+
+
         holder.btCancel.setOnClickListener(v -> {
 
+
             Map<String, Object> map = new HashMap<>();
+//            if (trip.getUID() != null)
+//                map.put("UID", trip.getUID());
+//            if (trip.getToken() != null)
+//                map.put("UID", trip.getToken());
+
             map.put("alarm", trip.getAlarm());
             map.put("date", trip.getDate());
             map.put("endPoint", trip.getEndPoint());
@@ -113,10 +149,10 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             builder.setTitle("Are You Sure?");
             builder.setMessage("Cancel this Trip.");
             builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
-                FirebaseDatabase.getInstance().getReference().child("trips").child(getRef(position).getKey()).removeValue();
-                FirebaseDatabase.getInstance().getReference().child("history").push().setValue(map);
+                FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
+                FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map);
 
-                FirebaseDatabase.getInstance().getReference().child("tripCancel").push().setValue(map)
+                FirebaseDatabase.getInstance().getReference().child("tripCancel"+user.getUid()).push().setValue(map)
                         .addOnSuccessListener(unused ->
                                 Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> {
@@ -232,12 +268,13 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                     month = month + 1;
                     String date = dayOfMonth + "/" + month + "/" + year;
                     tvDate.setText(date);
-                 }
+                }
             };
             btUpdate.setOnClickListener(v1 -> {
 
-                if(screen==1){
+                if (screen == 1) {
                     Map<String, Object> map = new HashMap<>();
+
                     map.put("alarm", tvTime.getText().toString());
                     map.put("date", tvDate.getText().toString());
                     map.put("endPoint", edEndPoint.getText().toString());
@@ -247,20 +284,21 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                     map.put("way", way.getText().toString());
                     map.put("status", Data.UPCOMING);
 
-                    FirebaseDatabase.getInstance().getReference("trips").child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+                    FirebaseDatabase.getInstance().getReference("trips"+user.getUid()).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
 
-                    }
-                });}else if(screen==2){
+                        }
+                    });
+                } else if (screen == 2) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("alarm", tvTime.getText().toString());
                     map.put("date", tvDate.getText().toString());
@@ -271,10 +309,10 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                     map.put("way", way.getText().toString());
                     map.put("status", Data.CANCEL);
 
-                    FirebaseDatabase.getInstance().getReference().child("history").push().setValue(map);
+                    FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map);
 
 
-                    FirebaseDatabase.getInstance().getReference("tripCancel").child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    FirebaseDatabase.getInstance().getReference("tripCancel"+user.getUid()).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
@@ -303,14 +341,14 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                 builder.setMessage("Delete data cant be Undo.");
                 builder.setPositiveButton("Delete", (dialog, which) -> {
 
-                    if(screen==1) {
-                        FirebaseDatabase.getInstance().getReference().child("trips").child(getRef(position).getKey()).removeValue();
-                    }else if(screen==2){
-                        FirebaseDatabase.getInstance().getReference().child("tripCancel").child(getRef(position).getKey()).removeValue();
+                    if (screen == 1) {
+                        FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
+                    } else if (screen == 2) {
+                        FirebaseDatabase.getInstance().getReference().child("tripCancel"+user.getUid()).child(getRef(position).getKey()).removeValue();
 
 
-                    }else if(screen==3){
-                        FirebaseDatabase.getInstance().getReference().child("history").child(getRef(position).getKey()).removeValue();
+                    } else if (screen == 3) {
+                        FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).child(getRef(position).getKey()).removeValue();
 
 
                     }
@@ -333,14 +371,14 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             map.put("repeat", trip.getRepeat());
             map.put("way", trip.getWay());
             map.put("status", Data.DONE);
-            if(screen==1){
-            FirebaseDatabase.getInstance().getReference().child("trips").child(getRef(position).getKey()).removeValue();}
-            else if(screen==2){
-                FirebaseDatabase.getInstance().getReference().child("tripCancel").child(getRef(position).getKey()).removeValue();
+            if (screen == 1) {
+                FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
+            } else if (screen == 2) {
+                FirebaseDatabase.getInstance().getReference().child("tripCancel"+user.getUid()).child(getRef(position).getKey()).removeValue();
 
 
             }
-            FirebaseDatabase.getInstance().getReference().child("history").push().setValue(map)
+            FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map)
                     .addOnSuccessListener(unused ->
                             Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
@@ -350,8 +388,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
         });
 
-
     }
+
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView txvStartPoint, txvEndPoint, txvTripNam, tvDate, tvTime, tvStatus, btStart, btCancel,tvSetWay,tvSeRepeat;

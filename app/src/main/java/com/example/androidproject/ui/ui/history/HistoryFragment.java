@@ -13,7 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
  import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -26,8 +28,7 @@ public class HistoryFragment extends Fragment {
     AddAdapter addAdapter;
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_history, container, false);
 
 AddAdapter.screen=3;
@@ -37,7 +38,7 @@ AddAdapter.screen=3;
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("history"), Trip.class).build();
+                .setQuery(FirebaseDatabase.getInstance().getReference().child("history"+ Data.USER.getUid()), Trip.class).build();
 
         addAdapter = new AddAdapter(options);
         recyclerView.setAdapter(addAdapter);
