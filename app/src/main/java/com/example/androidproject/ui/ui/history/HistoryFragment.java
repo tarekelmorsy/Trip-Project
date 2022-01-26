@@ -1,5 +1,7 @@
 package com.example.androidproject.ui.ui.history;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,11 +39,25 @@ AddAdapter.screen=3;
         recyclerView = view.findViewById(R.id.recHistory);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        if(!MainActivity.storedPreference.equals("null")){
+
         FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("history"+ Data.USER.getUid()), Trip.class).build();
+                .setQuery(FirebaseDatabase.getInstance().getReference().child("history"+ MainActivity.storedPreference), Trip.class).build();
 
         addAdapter = new AddAdapter(options);
-        recyclerView.setAdapter(addAdapter);
+        recyclerView.setAdapter(addAdapter);}
+
+        else if(Data.USER.getUid()!=null){
+
+
+
+            FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+                    .setQuery(FirebaseDatabase.getInstance().getReference().child("history"+ Data.USER.getUid()), Trip.class).build();
+
+            addAdapter = new AddAdapter(options);
+            recyclerView.setAdapter(addAdapter);
+        }
 
 
         return view;

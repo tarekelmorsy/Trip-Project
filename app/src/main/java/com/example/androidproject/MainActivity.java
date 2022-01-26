@@ -27,8 +27,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
 
-final String TAG="MainActivity";
+    final String TAG="MainActivity";
 FloatingActionButton  ftLogOut;
+   public static String storedPreference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,7 @@ FloatingActionButton  ftLogOut;
        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
         SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
 
-        String storedPreference = preferences.getString("x", "null");
+         storedPreference = preferences.getString("x", "null");
         Log.i(TAG, "onCreate: token= "+storedPreference);
 
         if(Data.USER==null&&storedPreference.equals("null") )

@@ -1,5 +1,7 @@
 package com.example.androidproject.ui.ui.cancel;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,11 +35,31 @@ public class CancelFragment extends Fragment {
         AddAdapter.screen=2;
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
+        if(!MainActivity.storedPreference.equals("null")){
         FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("tripCancel"+ Data.USER.getUid()), Trip.class).build();
+                .setQuery(FirebaseDatabase.getInstance().getReference().child("tripCancel"+ MainActivity.storedPreference), Trip.class).build();
 
         addAdapter = new AddAdapter(options);
-        recyclerView.setAdapter(addAdapter);
+        recyclerView.setAdapter(addAdapter);}
+        else if( Data.USER.getUid()!=null){
+
+            FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+                    .setQuery(FirebaseDatabase.getInstance().getReference().child("tripCancel"+ Data.USER.getUid()), Trip.class).build();
+
+            addAdapter = new AddAdapter(options);
+            recyclerView.setAdapter(addAdapter);
+
+        }
+
+
+
+
+
+
+
+
 
 
         return view;

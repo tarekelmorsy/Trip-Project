@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
@@ -185,13 +186,26 @@ final String TAG="AddTripActivity";
         map.put("repeat", repeat.getText().toString());
         map.put("way", way.getText().toString());
         map.put("status", Data.UPCOMING);
-        FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
+
+        if(!MainActivity.storedPreference.equals("null")){
+        FirebaseDatabase.getInstance().getReference().child("trips"+MainActivity.storedPreference).push().setValue(map)
 
                 .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> {
                     Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
 
                 });
+            }
+        else if(Data.USER.getUid()!=null){
+            FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
+
+                    .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
+
+                    });
+
+                    }
 
     }
 

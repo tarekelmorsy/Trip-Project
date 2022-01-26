@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.androidproject.MainActivity;
-import com.example.androidproject.TestActivity;
 import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
 import com.facebook.AccessToken;
@@ -55,20 +54,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         init();
         Data.FIREBASEAUTH = FirebaseAuth.getInstance();
-        //
-//        tvSignUp.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//
+
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, LoginEmail.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -83,12 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 tiPassword.setText("");
             }
         });
-//facebook login
 
-
-        //for git the hash code
-        //  FacebookSdk.sdkInitialize(getApplicationContext());
-        // Log.d("AppLog", "key:" + FacebookSdk.getApplicationSignature(this)+"=");
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         facebookLogin();
@@ -125,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "there is user token = " + currentAccessToken.getToken(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);//****
                     startActivity(intent);
+                    finish();
 
                 }
 
@@ -150,22 +138,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        // If using in a fragment
-        //   loginButton.setFragment(this);
+;
         loginButton.setReadPermissions("email", "public_profile");
-
-        // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
 
-// ]                  Log.i(TAG, "onCurrentAccessTokenChanged: " + currentAccessToken);
                handleFacebookAccessToken(loginResult.getAccessToken());
                 Toast.makeText(LoginActivity.this, "successful login ", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);//**
                 startActivity(intent);
+                finish();
             }
 
             @Override
@@ -183,10 +167,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-// Initialize Facebook Login button
-
-
-        ///
 
     }
 
@@ -202,9 +182,6 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(LoginActivity.this, "logined user"+currentUser.getEmail(), Toast.LENGTH_SHORT).show();
 
         Data.FIREBASEAUTH.addAuthStateListener(authStateListener);
-
-        // Check if user is signed in (non-null) and update UI accordingly.
-
     }
 
     @Override
@@ -217,7 +194,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 
     private void handleFacebookAccessToken(AccessToken token) {// for token
         Log.d(TAG, "handleFacebookAccessToken:" + token);
@@ -290,6 +271,7 @@ public class LoginActivity extends AppCompatActivity {
                             //Toast.makeText(LoginActivity.this, "correct user", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
+                            finish();
                         }
 
                     } else {
@@ -305,12 +287,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-
-    public void signOut() {// for email
-
-        Data.FIREBASEAUTH.signOut();
-
-    }
 
 
 }

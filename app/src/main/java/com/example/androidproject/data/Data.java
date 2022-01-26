@@ -17,7 +17,7 @@ public class Data {
     public static final String KEYMAP="AIzaSyAtaH8N_lSkKtae12pgySJsPbhBHolTSlY";
    public static FirebaseAuth FIREBASEAUTH=FirebaseAuth.getInstance();
 
-    public static FirebaseUser USER;
+    public static FirebaseUser USER=FIREBASEAUTH.getCurrentUser();
 
 
 

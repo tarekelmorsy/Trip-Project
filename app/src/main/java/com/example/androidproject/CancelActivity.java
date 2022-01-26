@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -21,10 +22,10 @@ public class CancelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cancel);
         recyclerView = findViewById(R.id.recCancel);
         AddAdapter.screen=2;
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(CancelActivity.this));
-        FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("tripCancel"), Trip.class).build();
+if(MainActivity.storedPreference.equals("null")) {
+    recyclerView.setLayoutManager(new LinearLayoutManager(CancelActivity.this));
+    FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+            .setQuery(FirebaseDatabase.getInstance().getReference().child("tripCancel"+MainActivity.storedPreference), Trip.class).build();
 
         //   Toast.makeText(MainActivity.this, options.getSnapshots().get(0).getTripName()+options.getSnapshots().get(1).getTripName(), Toast.LENGTH_SHORT).show();
         if (!options.getSnapshots().isEmpty()) {
@@ -34,7 +35,28 @@ public class CancelActivity extends AppCompatActivity {
 
         }
         addAdapter = new AddAdapter(options);
-        recyclerView.setAdapter(addAdapter);
+        recyclerView.setAdapter(addAdapter);}
+
+else if(Data.USER.getUid()!=null){
+
+
+    recyclerView.setLayoutManager(new LinearLayoutManager(CancelActivity.this));
+    FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+            .setQuery(FirebaseDatabase.getInstance().getReference().child("tripCancel"+Data.USER.getUid()), Trip.class).build();
+
+    //   Toast.makeText(MainActivity.this, options.getSnapshots().get(0).getTripName()+options.getSnapshots().get(1).getTripName(), Toast.LENGTH_SHORT).show();
+    if (!options.getSnapshots().isEmpty()) {
+
+        Toast.makeText(CancelActivity.this, options.getSnapshots().get(1).toString(), Toast.LENGTH_SHORT).show();
+
+
+    }
+    addAdapter = new AddAdapter(options);
+    recyclerView.setAdapter(addAdapter);
+
+
+
+}
 
 
 

@@ -24,6 +24,8 @@ import com.example.androidproject.reciever.AlarmReceiver;
 import com.example.androidproject.ui.AddTripActivity;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
@@ -37,6 +39,8 @@ public class HomeFragment extends Fragment {
     AddAdapter addAdapter;
       FloatingActionButton btAdd;
     Calendar calendar;
+FirebaseUser user;
+    public  FirebaseAuth FIREBASEAUTH;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,16 +49,30 @@ public class HomeFragment extends Fragment {
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        FIREBASEAUTH=FirebaseAuth.getInstance();
+        user= FIREBASEAUTH.getCurrentUser();
 
 
 
         recyclerView = binding.recUpcoming;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-          FirebaseRecyclerOptions<Trip> options=new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid()),Trip.class).build();
-          //options.getSnapshots().get(0);
-         addAdapter = new AddAdapter(options);
-        recyclerView.setAdapter(addAdapter);
+
+        if(!MainActivity.storedPreference.equals("null")) {
+            FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+                    .setQuery(FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference), Trip.class).build();
+            //options.getSnapshots().get(0);
+            addAdapter = new AddAdapter(options);
+            recyclerView.setAdapter(addAdapter);
+        }
+
+        else if(Data.USER.getUid()!=null){
+            FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+                    .setQuery(FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()), Trip.class).build();
+            //options.getSnapshots().get(0);
+            addAdapter = new AddAdapter(options);
+            recyclerView.setAdapter(addAdapter);
+        }
+
 
 
         btAdd=binding.floatingActionButton;
