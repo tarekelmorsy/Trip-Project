@@ -1,14 +1,10 @@
 package com.example.androidproject.ui.ui.upcoming;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,17 +12,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.androidproject.MainActivity;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
 import com.example.androidproject.databinding.FragmentHomeBinding;
-import com.example.androidproject.reciever.AlarmReceiver;
 import com.example.androidproject.ui.AddTripActivity;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Calendar;
 
 
 public class HomeFragment extends Fragment {
@@ -35,8 +27,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     RecyclerView recyclerView;
     AddAdapter addAdapter;
-      FloatingActionButton btAdd;
-    Calendar calendar;
+    FloatingActionButton btAdd;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,7 +36,6 @@ public class HomeFragment extends Fragment {
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-
 
 
         recyclerView = binding.recUpcoming;
