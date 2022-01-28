@@ -35,8 +35,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     RecyclerView recyclerView;
     AddAdapter addAdapter;
-      FloatingActionButton btAdd;
-    Calendar calendar;
+    FloatingActionButton btAdd;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,7 +44,6 @@ public class HomeFragment extends Fragment {
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-
 
 
         recyclerView = binding.recUpcoming;

@@ -1,9 +1,11 @@
 package com.example.androidproject.reciever;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 
 public class DialogActivity2 extends AppCompatActivity {
@@ -43,8 +46,19 @@ public class DialogActivity2 extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 Toast.makeText(DialogActivity2.this, "You pressed cancel.", Toast.LENGTH_SHORT).show();
                 dialogInterface.cancel();
+
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                Intent myIntent = new Intent(getBaseContext(), AlarmReceiver.class);
+                PendingIntent pendingIntent1 = PendingIntent.getBroadcast(getBaseContext(), 0,
+                        myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                alarmManager.cancel(pendingIntent1);
+
                 mediaPlayer.stop();
                 finish();
+
             }
         });
 
@@ -104,6 +118,7 @@ public class DialogActivity2 extends AppCompatActivity {
     }
 
     private NotificationCompat.Builder getNotificationBuilder(){
+
         Intent intent = new Intent(this,DialogActivity2.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)

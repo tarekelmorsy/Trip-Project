@@ -123,7 +123,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         tripStatus.add(position,trip.getStatus());
 
 
-        Toast.makeText(holder.tvTime.getContext(),""+tripDate.size(), Toast.LENGTH_SHORT).show();
+       // Toast.makeText(holder.tvTime.getContext(),""+tripDate.size(), Toast.LENGTH_SHORT).show();
 
 
 
