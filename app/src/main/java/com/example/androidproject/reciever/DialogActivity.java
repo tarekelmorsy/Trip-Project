@@ -18,10 +18,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
-import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 
-public class DialogActivity2 extends AppCompatActivity {
+public class DialogActivity extends AppCompatActivity {
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     private NotificationManager mNotifyManager;
     private static final int NOTIFICATION_ID = 0;
@@ -35,7 +34,7 @@ public class DialogActivity2 extends AppCompatActivity {
         mediaPlayer= MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);
         mediaPlayer.start();
 
-        AlertDialog.Builder alertdialog = new AlertDialog.Builder(DialogActivity2.this);
+        AlertDialog.Builder alertdialog = new AlertDialog.Builder(DialogActivity.this);
         alertdialog.setCancelable(false);   // that make the dialog cant cancelled until u click inside the dialog itself
         alertdialog.setTitle("TRIP REMINDER");
         alertdialog.setMessage("Select Start , Snooze , Cancel.");
@@ -44,18 +43,8 @@ public class DialogActivity2 extends AppCompatActivity {
         alertdialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(DialogActivity2.this, "You pressed cancel.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DialogActivity.this, "You pressed cancel.", Toast.LENGTH_SHORT).show();
                 dialogInterface.cancel();
-
-
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                Intent myIntent = new Intent(getBaseContext(), AlarmReceiver.class);
-                PendingIntent pendingIntent1 = PendingIntent.getBroadcast(getBaseContext(), 0,
-                        myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-                alarmManager.cancel(pendingIntent1);
-
                 mediaPlayer.stop();
                 finish();
 
@@ -65,7 +54,7 @@ public class DialogActivity2 extends AppCompatActivity {
         alertdialog.setPositiveButton("Snooze", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(DialogActivity2.this, "You pressed snooze.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DialogActivity.this, "You pressed snooze.", Toast.LENGTH_SHORT).show();
                 sendNotification();
                 mediaPlayer.stop();
                 finish();
@@ -76,7 +65,7 @@ public class DialogActivity2 extends AppCompatActivity {
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                Toast.makeText(DialogActivity2.this, "you pressed start.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DialogActivity.this, "you pressed start.", Toast.LENGTH_SHORT).show();
                 //Intent intent1 = new Intent(DialogActivity2.this,MainActivity.class);
                // startActivity(intent1);
                 mediaPlayer.stop();
@@ -119,7 +108,7 @@ public class DialogActivity2 extends AppCompatActivity {
 
     private NotificationCompat.Builder getNotificationBuilder(){
 
-        Intent intent = new Intent(this,DialogActivity2.class);
+        Intent intent = new Intent(this, DialogActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("TRIP REMINDER")

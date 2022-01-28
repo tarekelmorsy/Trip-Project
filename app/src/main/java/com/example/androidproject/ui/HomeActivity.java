@@ -1,15 +1,9 @@
 package com.example.androidproject.ui;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.androidproject.R;
 import com.example.androidproject.databinding.ActivityHomeBinding;
-import com.example.androidproject.reciever.AlarmReceiver;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +11,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import java.util.Calendar;
 
 public class HomeActivity extends AppCompatActivity {
 
