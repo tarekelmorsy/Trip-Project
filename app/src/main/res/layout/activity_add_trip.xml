@@ -138,25 +138,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edEndPoint" />
 
-        <ImageView
-            android:id="@+id/imvDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9"
-            app:srcCompat="@drawable/ic_date" />
 
-        <ImageView
-            android:id="@+id/imvTime"
+        <TextView
+            android:id="@+id/tvGoing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="68dp"
+            android:layout_margin="30dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bg_edet_text"
+            android:paddingStart="15sp"
+            android:paddingTop="4dp"
+            android:paddingEnd="15dp"
+            android:visibility="gone"
+            android:paddingBottom="2dp"
+            android:text="@string/going"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9"
-            app:srcCompat="@drawable/ic_time" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/repeat_til"
@@ -167,7 +169,7 @@
             android:layout_marginTop="20dp"
             android:textColor="@color/black"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDate">
+            app:layout_constraintTop_toBottomOf="@+id/containerBack">
 
             <AutoCompleteTextView
                 android:id="@+id/repeat"
@@ -192,7 +194,7 @@
             android:layout_marginEnd="30dp"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTime">
+            app:layout_constraintTop_toBottomOf="@+id/containerBack">
 
             <AutoCompleteTextView
                 android:id="@+id/way"
@@ -228,6 +230,26 @@
             app:layout_constraintTop_toBottomOf="@+id/repeat_til" />
 
 
+        <ImageView
+            android:id="@+id/imvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvGoing"
+            app:srcCompat="@drawable/ic_date" />
+
+        <ImageView
+            android:id="@+id/imvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="68dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvGoing"
+            app:srcCompat="@drawable/ic_time" />
+
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
@@ -245,6 +267,73 @@
             android:layout_marginEnd="60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imvTime" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/containerBack"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTime">
+
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/bg_edet_text"
+                android:paddingStart="15sp"
+                android:paddingTop="4dp"
+                android:paddingEnd="15dp"
+                android:paddingBottom="2dp"
+                android:text="@string/coming_back"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTime" />
+
+            <ImageView
+                android:id="@+id/imvDateBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView11"
+                app:srcCompat="@drawable/ic_date" />
+
+            <ImageView
+                android:id="@+id/imvTimeBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="68dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView11"
+                app:srcCompat="@drawable/ic_time" />
+
+            <TextView
+                android:id="@+id/tvDateBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imvDateBack" />
+
+            <TextView
+                android:id="@+id/tvTimeBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="60dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imvTimeBack" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

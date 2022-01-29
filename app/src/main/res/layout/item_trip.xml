@@ -47,11 +47,23 @@
 
         android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/container_title"
+            android:weightSum="2"
+            android:background="@drawable/bg_itme"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_itme"
             android:gravity="center"
             android:text="TextView"
             android:textColor="@color/black"
@@ -59,13 +71,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/tvRepeat"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="coming back"
+                android:textColor="@color/brown_grey"
+                android:textSize="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 <LinearLayout
     android:layout_width="match_parent"
     android:weightSum="3"
     android:id="@+id/container1"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/tvStatus"
+    app:layout_constraintTop_toBottomOf="@+id/container_title"
     android:layout_marginTop="10dp"
     android:layout_marginEnd="50dp"
 
@@ -272,7 +298,7 @@
                  />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/tvGoing"
                 android:layout_width="0dp"
                 android:layout_weight=".5"
                 android:gravity="center"

@@ -10,9 +10,15 @@ public class Trip {
     private String way;
     private String notes;
     private String status;
+    private String latLogEnd;
 
+    public String getLatLogEnd() {
+        return latLogEnd;
+    }
 
-
+    public void setLatLogEnd(String latLogEnd) {
+        this.latLogEnd = latLogEnd;
+    }
 
     public String getStatus() {
         return status;

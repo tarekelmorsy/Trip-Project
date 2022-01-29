@@ -1,6 +1,7 @@
 package com.example.androidproject.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -46,8 +47,8 @@ import java.util.Map;
 public class AddTripActivity extends AppCompatActivity {
 
     private EditText edStartPoint, edEndPoint, edTripName;
-    private ImageView imvTime, imvDate;
-    private TextView tvTime, tvDate;
+    private ImageView imvTime, imvDate, imvTimeBack, imvDateBack;
+    private TextView tvDate,tvTime, tvTimeBack, tvDateBack ,tvGoing;
     private int t1Hour, t1Minut;
     private Button btAdd;
     private AutoCompleteTextView repeat, way;
@@ -56,6 +57,11 @@ public class AddTripActivity extends AppCompatActivity {
     public static ArrayList<String> repeatList;
     public static ArrayList<String> wayList;
     public static DatePickerDialog.OnDateSetListener listenerDate;
+    Calendar calendar = Calendar.getInstance();
+    final int year = calendar.get(Calendar.YEAR);
+    final int month = calendar.get(Calendar.MONTH);
+    final int day = calendar.get(Calendar.DAY_OF_MONTH);
+    private ConstraintLayout containerBack;
 
 final String TAG="AddTripActivity";
     @Override
@@ -76,19 +82,7 @@ final String TAG="AddTripActivity";
 
         way.setFocusable(false);
         repeat.setFocusable(false);
-       // edStartPoint.setFocusable(false);
-        /*edStartPoint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                //////////////////////////////
-                List<Place.Field> fieldList = Arrays.asList(Place.Field.ID, Place.Field.ADDRESS
-                        , Place.Field.LAT_LNG, Place.Field.NAME);
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY
-                        , fieldList).build(AddTripActivity.this);
-                startActivityForResult(intent, 100);
-            }
-        });*/
         wayList.add(getString(R.string.oneWay));
         wayList.add(getString(R.string.towWay));
         repeatList.add(getString(R.string.noRepeat));
@@ -101,56 +95,37 @@ final String TAG="AddTripActivity";
         arrayAdapterWay = new ArrayAdapter(getApplicationContext(), R.layout.tv_entity, wayList);
         way.setAdapter(arrayAdapterWay);
 
-        Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        if(way.getText().toString().equals(getString(R.string.towWay))){
+            tvGoing.setVisibility(View.VISIBLE);
+            containerBack.setVisibility(View.VISIBLE);}
+        else {
+            tvGoing.setVisibility(View.GONE);
+            containerBack.setVisibility(View.GONE);
+
+        }
 
         //show timeDialog
-        imvTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(AddTripActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        t1Hour = hourOfDay;
-                        t1Minut = minute;
+        imvTime.setOnClickListener(v -> setTime(tvTime));
+        imvDate.setOnClickListener(v ->  setDate(tvDate));
+        imvTimeBack.setOnClickListener(v -> setTime(tvTimeBack));
+        imvDateBack.setOnClickListener(v ->  setDate(tvDateBack));
+        way.setOnClickListener(v->{
+            if(way.getText().toString().equals(getString(R.string.towWay))){
+                tvGoing.setVisibility(View.VISIBLE);
+                containerBack.setVisibility(View.VISIBLE);}
+            else {
+                tvGoing.setVisibility(View.GONE);
+                containerBack.setVisibility(View.GONE);
 
-                        calendar.set(0, 0, 0, t1Hour, t1Minut);
-                        tvTime.setText(DateFormat.format("hh:mm aa", calendar));
-
-                    }
-                }, 12, 0, false);
-                timePickerDialog.updateTime(t1Hour, t1Minut);
-                timePickerDialog.show();
             }
         });
-        imvDate.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(AddTripActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth
-                        , listenerDate, year, month, day);
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                datePickerDialog.show();
-            }
-        });
-        listenerDate = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;
-                String date = dayOfMonth + "/" + month + "/" + year;
-                tvDate.setText(date);
-
-            }
-        };
-
 
         btAdd.setOnClickListener(v -> {
             insertData();
             clearAll();
+            finish();
         });
+
 
     }
 
@@ -177,21 +152,54 @@ final String TAG="AddTripActivity";
 //        }
 
         ///***************************************
-        map.put("alarm", tvTime.getText().toString());
-        map.put("date", tvDate.getText().toString());
+
         map.put("endPoint", edEndPoint.getText().toString());
         map.put("startPoint", edStartPoint.getText().toString());
         map.put("tripName", edTripName.getText().toString());
         map.put("repeat", repeat.getText().toString());
         map.put("way", way.getText().toString());
-        map.put("status", Data.UPCOMING);
-        FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
+            map.put("status", Data.UPCOMING);
+            map.put("latLogEnd", "30°31'32.5, 30°57'10.5");
 
-                .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> {
-                    Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
+            FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()).push().setValue(map)
 
-                });
+                    .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
+
+                    });
+
+            /*
+            if(way.getText().toString().equals(getString(R.string.towWay))){
+            tvGoing.setVisibility(View.VISIBLE);
+            containerBack.setVisibility(View.VISIBLE);
+            map.put("status", Data.UPCOMINGR1);
+            map.put("alarm", tvTime.getText().toString());
+            map.put("date", tvDate.getText().toString());
+            map.put(" latLogEnd", "30°31'32.5, 30°57'10.5");
+
+
+            FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
+
+                    .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
+
+                    });
+            map.put("status", Data.UPCOMINGR2);
+            map.put("alarm", tvTimeBack.getText().toString());
+            map.put("date", tvDateBack.getText().toString());
+
+            FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
+
+                    .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
+
+                    });
+
+        }else {
+             */
 
     }
 
@@ -223,6 +231,8 @@ final String TAG="AddTripActivity";
         tvDate.setText("");
         repeat.setText(R.string.noRepeat);
         way.setText(R.string.oneWay);
+        tvTimeBack.setText("");
+        tvDateBack.setText("");
 
     }
 
@@ -239,7 +249,44 @@ final String TAG="AddTripActivity";
         repeatList = new ArrayList<>();
         wayList = new ArrayList<>();
         btAdd = findViewById(R.id.btAdd);
+        imvDateBack = findViewById(R.id.imvDateBack);
+        imvTimeBack = findViewById(R.id.imvTimeBack);
+        tvDateBack = findViewById(R.id.tvDateBack);
+        tvTimeBack = findViewById(R.id.tvTimeBack);
+        tvGoing=findViewById(R.id.tvGoing);
+        containerBack=findViewById(R.id.containerBack);
+    }
 
+    public void setDate(TextView tvDate){
+
+
+        listenerDate = (view, year, month, dayOfMonth) -> {
+            month = month + 1;
+            String date = dayOfMonth + "/" + month + "/" + year;
+            tvDate.setText(date);
+
+        };
+        DatePickerDialog datePickerDialog = new DatePickerDialog(AddTripActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth
+                , listenerDate, year, month, day);
+        datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        datePickerDialog.show();
+
+    }
+    public void setTime(TextView tvTime ){
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(AddTripActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                t1Hour = hourOfDay;
+                t1Minut = minute;
+
+                calendar.set(0, 0, 0, t1Hour, t1Minut);
+                tvTime.setText(DateFormat.format("hh:mm aa", calendar));
+
+            }
+        }, 12, 0, false);
+        timePickerDialog.updateTime(t1Hour, t1Minut);
+        timePickerDialog.show();
     }
 
     @Override

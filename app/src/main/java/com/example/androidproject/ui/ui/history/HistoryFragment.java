@@ -19,19 +19,38 @@ import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
  import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class HistoryFragment extends Fragment {
 
     RecyclerView recyclerView;
     AddAdapter addAdapter;
+    private GoogleMap mMap;
+    ArrayList markerPoints= new ArrayList();
 
-
+    Polyline polyline=null;
+    List<LatLng> latLngs=new ArrayList<>();
+    List<Marker> markerList=new ArrayList<>();
+     private List<LatLng> polyLineList;
+    private PolylineOptions polylineOptions;
+    private LatLng originl,destinationl;
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_history, container, false);
 
-AddAdapter.screen=3;
+        AddAdapter.screen=3;
 
 
         recyclerView = view.findViewById(R.id.recHistory);
@@ -42,7 +61,32 @@ AddAdapter.screen=3;
 
         addAdapter = new AddAdapter(options);
         recyclerView.setAdapter(addAdapter);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        originl=new LatLng(31.423281, 31.810107);
+        destinationl=new LatLng(31.421743, 31.810869
+        );
 
+
+         latLngs.add(originl);
+        latLngs.add(destinationl);
+        if (polyline!=null)polyline.remove();
+
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap googleMap) {
+                mMap = googleMap;
+                 mMap.setTrafficEnabled(true);
+                PolylineOptions polylineOptions=new PolylineOptions().addAll(latLngs).clickable(true);
+                polyline=mMap.addPolyline(polylineOptions);
+                polyline=mMap.addPolyline(polylineOptions);
+                    for (LatLng latLng : latLngs) {
+                        MarkerOptions markerOptions = new MarkerOptions().position(latLng);
+                    mMap.addMarker(markerOptions);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                }
+
+            }});
 
         return view;
     }
