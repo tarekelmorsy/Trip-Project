@@ -1,5 +1,6 @@
 package com.example.androidproject.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -17,7 +18,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,13 +28,13 @@ import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -62,6 +62,18 @@ public class AddTripActivity extends AppCompatActivity {
     final int month = calendar.get(Calendar.MONTH);
     final int day = calendar.get(Calendar.DAY_OF_MONTH);
     private ConstraintLayout containerBack;
+    List<Place.Field> placeFields;
+    int STARTKEY =100;
+    int ENDKEY =101;
+
+    private double endLat;
+    private double startLat;
+    private double endLong;
+    private double startLong;
+    private   String endMapLatLong;
+
+
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
 final String TAG="AddTripActivity";
     @Override
@@ -72,14 +84,65 @@ final String TAG="AddTripActivity";
         Data.USER= Data.FIREBASEAUTH.getCurrentUser();
         //Log.i(TAG, "onCreate: uidddd"+user.getUid());
         AddAdapter.screen=1;
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), Data.KEYMAP);
+        }
 
-        Places.initialize(getApplicationContext(), Data.KEYMAP);
-        String placeId = "INSERT_PLACE_ID_HERE";
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+           PlacesClient placesClient=Places.createClient(this);
 
-        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields)
-                .build();
+/*
 
+        // Initialize the AutocompleteSupportFragment.
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+            }
+
+
+            @Override
+            public void onError(@NonNull Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+*/
+
+
+
+
+
+
+        edStartPoint.setFocusable(false);
+        edEndPoint.setFocusable(false);
+
+        edStartPoint.setOnClickListener(v -> {
+            placeFields = Arrays.asList(Place.Field.ADDRESS,Place.Field.LAT_LNG, Place.Field.NAME);
+
+            Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,placeFields)
+                    .build(AddTripActivity.this);
+            startActivityForResult(intent, STARTKEY);
+
+
+        });
+        edEndPoint.setOnClickListener(v -> {
+            placeFields = Arrays.asList(Place.Field.ADDRESS,Place.Field.LAT_LNG, Place.Field.NAME);
+
+             Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,placeFields)
+                    .build(AddTripActivity.this);
+            startActivityForResult(intent, ENDKEY);
+
+
+        });
         way.setFocusable(false);
         repeat.setFocusable(false);
 
@@ -138,30 +201,21 @@ final String TAG="AddTripActivity";
 
         String storedPreference = preferences.getString("x", "null");
         Log.i(TAG, "onCreate: token= "+storedPreference);
-
-
-
-        //
         Map<String, Object> map = new HashMap<>();
-//        if(user!=null ){
-//            map.put("UID",user.getUid());
-//
-//        }
-//        else if(!storedPreference.equals("null")){
-//            map.put("UID",storedPreference);
-//        }
-
-        ///***************************************
-
         map.put("endPoint", edEndPoint.getText().toString());
         map.put("startPoint", edStartPoint.getText().toString());
         map.put("tripName", edTripName.getText().toString());
         map.put("repeat", repeat.getText().toString());
         map.put("way", way.getText().toString());
-            map.put("status", Data.UPCOMING);
-            map.put("latLogEnd", "30°31'32.5, 30°57'10.5");
+        map.put("status", Data.UPCOMING);
+        map.put("latLogEnd", endMapLatLong);
+        map.put("endLat", endLat);
+        map.put("endLong", endLong);
+        map.put("startLat", startLat);
+        map.put("startLong", startLong);
 
-            FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()).push().setValue(map)
+
+        FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()).push().setValue(map)
 
                     .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
@@ -289,17 +343,57 @@ final String TAG="AddTripActivity";
         timePickerDialog.show();
     }
 
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                Toast.makeText(AddTripActivity.this, (place.getAddress()+""+place.getLatLng()), Toast.LENGTH_SHORT).show();
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i(TAG, status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+*/
+
     @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        super.onActivityReenter(resultCode, data);
-        if (resultCode == 100 && resultCode == RESULT_OK) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == STARTKEY && resultCode == RESULT_OK) {
 
             Place place = Autocomplete.getPlaceFromIntent(data);
             edStartPoint.setText(place.getAddress());
-        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            startLat=place.getLatLng().latitude;
+            startLong=place.getLatLng().longitude;
+
+
+        }else if(requestCode == ENDKEY && resultCode == RESULT_OK){
+
+            Place place = Autocomplete.getPlaceFromIntent(data);
+             edEndPoint.setText(place.getAddress());
+           endLong=place.getLatLng().longitude;
+           endLat=place.getLatLng().latitude;
+            endMapLatLong=String.valueOf(place.getLatLng().latitude+", "+place.getLatLng().longitude);
+
+
+
+        }
+
+
+        else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
 
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(AddTripActivity.this, status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
+
     }
 }

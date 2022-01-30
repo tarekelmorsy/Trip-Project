@@ -425,6 +425,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                     tvBicycle.getContext().startActivity(intent);
                     dialog.dismiss();
 
+
                 }});
 
             Map<String, Object> map = new HashMap<>();

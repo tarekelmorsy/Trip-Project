@@ -1,5 +1,7 @@
 package com.example.androidproject.data;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Trip {
     private String tripName;
     private String startPoint;
@@ -11,6 +13,42 @@ public class Trip {
     private String notes;
     private String status;
     private String latLogEnd;
+    private double endLat;
+    private double startLat;
+    private double endLong;
+    private double startLong;
+
+    public double getEndLat() {
+        return endLat;
+    }
+
+    public void setEndLat(double endLat) {
+        this.endLat = endLat;
+    }
+
+    public double getStartLat() {
+        return startLat;
+    }
+
+    public void setStartLat(double startLat) {
+        startLat = startLat;
+    }
+
+    public double getEndLong() {
+        return endLong;
+    }
+
+    public void setEndLong(double endLong) {
+        this.endLong = endLong;
+    }
+
+    public double getStartLong() {
+        return startLong;
+    }
+
+    public void setStartLong(double startLong) {
+        startLong = startLong;
+    }
 
     public String getLatLogEnd() {
         return latLogEnd;
