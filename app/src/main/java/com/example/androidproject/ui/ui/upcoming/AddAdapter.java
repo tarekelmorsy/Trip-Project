@@ -134,8 +134,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         tripHour.add(position,trip.getAlarm());
         tripStatus.add(position,trip.getStatus());
 
-
-        //Toast.makeText(holder.tvTime.getContext(),""+tripDate.size(), Toast.LENGTH_SHORT).show();
+ 
 
 
 

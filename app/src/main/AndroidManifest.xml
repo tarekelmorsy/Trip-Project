@@ -64,14 +64,9 @@
         </activity>
 
         <activity
-            android:name=".reciever.DialogActivity2"
+            android:name=".reciever.DialogActivity"
             android:theme="@style/Theme.AppCompat.transparent"
             android:exported="false" />
-
-        <receiver
-            android:name=".reciever.AlarmReceiver"
-            android:enabled="true"
-            android:exported="true" />
 
 
         <activity

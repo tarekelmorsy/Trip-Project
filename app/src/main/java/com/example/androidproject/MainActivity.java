@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+=======
+
 
 import com.example.androidproject.Registeration.LoginActivity;
 import com.example.androidproject.data.Data;
@@ -29,13 +31,22 @@ import com.example.androidproject.ui.ui.upcoming.HomeFragment;
 import com.example.androidproject.ui.ui.history.HistoryFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+ 
+
+import java.util.ArrayList;
+import java.util.Calendar;
+ 
 
 public class MainActivity extends AppCompatActivity {
 
+    public ArrayList<Calendar> calendars = new ArrayList<>();
 
+
+ 
 final String TAG="MainActivity";
       DrawerLayout drawer;
     private AppBarConfiguration mAppBarConfiguration;
@@ -44,28 +55,34 @@ final String TAG="MainActivity";
 
     TextView textView;
 
-    @Override
+     final String TAG="MainActivity";
+    FloatingActionButton  ftLogOut;
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //ftLogOut=findViewById(R.id.floatingActionButton2);
+         //ftLogOut=findViewById(R.id.floatingActionButton2);
 
         textView=findViewById(R.id.tvNameUser);
        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
-        SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
+ 
+
+        ftLogOut=findViewById(R.id.floatingActionButton2);
+        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
+         SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
         setUpToolbar();
         String storedPreference = preferences.getString("x", "null");
         Log.i(TAG, "onCreate: token= "+storedPreference);
 
         if(Data.USER==null&&storedPreference.equals("null") )
-{
-    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
-    finish();
-    return;
+            finish();
+            return;
 
+        }
 
-}
 
         Toast.makeText(MainActivity.this, Data.USER.getEmail().toString(), Toast.LENGTH_SHORT).show();
 
