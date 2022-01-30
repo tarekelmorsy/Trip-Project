@@ -44,6 +44,7 @@
     <string name="facebook_app_id">518920196231822</string>
     <string name="fb_login_protocol_scheme">fb518920196231822</string>
     <string name="please_verify_your_email_to_login">please verfiy</string>
+    <string name="text_note">text note</string>
     <string name="going">going</string>
     <string name="coming_back">coming back</string>
     <string name="log_out">log out</string>

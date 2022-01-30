@@ -1,5 +1,7 @@
 package com.example.androidproject.ui.ui.history;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
  import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -68,11 +71,16 @@ public class HistoryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_history, container, false);
 
+AddAdapter.screen=3;
+        DatabaseReference scoresRef = FirebaseDatabase.getInstance().getReference().child("history"+ MainActivity.storedPreference);
+        scoresRef.keepSynced(true);
+        DatabaseReference scoresRef2 = FirebaseDatabase.getInstance().getReference().child("history"+ MainActivity.storedUid);
+        scoresRef2.keepSynced(true);
         AddAdapter.screen=3;
         user= firebaseAuth.getCurrentUser();
 
 
-        arrayTrips=new ArrayList<>();
+        arrayTrips=new ArrayList<>();//map edit
           databaseReference = FirebaseDatabase.getInstance().getReference().child("history"+ Data.USER.getUid()) ;
 
           databaseReference.addValueEventListener(new ValueEventListener() {
@@ -103,10 +111,27 @@ public class HistoryFragment extends Fragment {
       Toast.makeText(getContext(), latLngs.size()+"", Toast.LENGTH_SHORT).show();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        if(!MainActivity.storedPreference.equals("null")){
+
         FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("history"+ Data.USER.getUid()), Trip.class).build();
+                .setQuery(scoresRef, Trip.class).build();
 
         addAdapter = new AddAdapter(options);
+        recyclerView.setAdapter(addAdapter);}
+
+        else if(! MainActivity.storedUid.equals("no id exist")){
+
+
+
+            FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+                    .setQuery(scoresRef2, Trip.class).build();
+
+            addAdapter = new AddAdapter(options);
+            recyclerView.setAdapter(addAdapter);
+        }
+
         recyclerView.setAdapter(addAdapter);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);

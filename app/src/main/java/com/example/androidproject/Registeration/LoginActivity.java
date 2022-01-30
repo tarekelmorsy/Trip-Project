@@ -15,8 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.androidproject.MainActivity;
-import com.example.androidproject.TestActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.SimpleService;
 import com.example.androidproject.data.Data;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -34,6 +34,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.siddharthks.bubbles.FloatingBubblePermissions;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -43,32 +45,34 @@ public class LoginActivity extends AppCompatActivity {
     TextInputEditText tiEmail, tiPassword;
     LoginButton loginButton;
 
-    final String TAG = "LoginActivity";
+   final String TAG = "LoginActivity";
 
     private CallbackManager callbackManager;
     private FirebaseAuth.AuthStateListener authStateListener;
     private AccessTokenTracker tracker;
-
+    FirebaseUser firebaseUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
-        Data.FIREBASEAUTH = FirebaseAuth.getInstance();
-        //
-//        tvSignUp.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
 //
+//        FloatingBubblePermissions.startPermissionRequest(this);
+//        startService(new Intent(getApplicationContext(), SimpleService.class));
+        Data.FIREBASEAUTH = FirebaseAuth.getInstance();
+         firebaseUser =  Data.FIREBASEAUTH.getCurrentUser();
+
+     //Data.FIREBASEAUTH.Persistence.LOCAL;
+
+       // firebase.auth.Auth.Persistence.LOCAL;
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, LoginEmail.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -81,14 +85,10 @@ public class LoginActivity extends AppCompatActivity {
                 login(email, password);
                 tiEmail.setText("");
                 tiPassword.setText("");
+              //  Log.i(TAG, "onClick: uid"+Data.USER.getUid());
             }
         });
-//facebook login
 
-
-        //for git the hash code
-        //  FacebookSdk.sdkInitialize(getApplicationContext());
-        // Log.d("AppLog", "key:" + FacebookSdk.getApplicationSignature(this)+"=");
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         facebookLogin();
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                 firebaseUser = firebaseAuth.getCurrentUser();//&&&&&&&
 
                 if (firebaseUser != null) {
 
@@ -125,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "there is user token = " + currentAccessToken.getToken(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);//****
                     startActivity(intent);
+                    finish();
 
                 }
 
@@ -150,22 +151,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        // If using in a fragment
-        //   loginButton.setFragment(this);
+;
         loginButton.setReadPermissions("email", "public_profile");
-
-        // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
 
-// ]                  Log.i(TAG, "onCurrentAccessTokenChanged: " + currentAccessToken);
                handleFacebookAccessToken(loginResult.getAccessToken());
                 Toast.makeText(LoginActivity.this, "successful login ", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);//**
                 startActivity(intent);
+                finish();
             }
 
             @Override
@@ -183,28 +180,21 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-// Initialize Facebook Login button
-
-
-        ///
 
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = Data.FIREBASEAUTH.getCurrentUser();
-        updateUI(currentUser);
+        firebaseUser = Data.FIREBASEAUTH.getCurrentUser();//&&&
+        updateUI(firebaseUser);
         if((Data.FIREBASEAUTH.getCurrentUser())==null)
             Toast.makeText(LoginActivity.this, "not exist ", Toast.LENGTH_SHORT).show();
 
         else
-            Toast.makeText(LoginActivity.this, "logined user"+currentUser.getEmail(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "logined user"+firebaseUser.getEmail(), Toast.LENGTH_SHORT).show();
 
         Data.FIREBASEAUTH.addAuthStateListener(authStateListener);
-
-        // Check if user is signed in (non-null) and update UI accordingly.
-
     }
 
     @Override
@@ -217,7 +207,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 
     private void handleFacebookAccessToken(AccessToken token) {// for token
         Log.d(TAG, "handleFacebookAccessToken:" + token);
@@ -230,9 +224,9 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = Data.FIREBASEAUTH.getCurrentUser();
-                            Toast.makeText(LoginActivity.this, "user account is" + user, Toast.LENGTH_SHORT).show();
-                            updateUI(user);
+                             firebaseUser = Data.FIREBASEAUTH.getCurrentUser();///&&&&&&&&&&&&&&&&&&&
+                            Toast.makeText(LoginActivity.this, "user account is" + firebaseUser, Toast.LENGTH_SHORT).show();
+                            updateUI(firebaseUser);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -259,7 +253,7 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
 
 
-            Toast.makeText(this, "user is " + user.getEmail(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "user is " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
 
 
       }
@@ -279,23 +273,30 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = Data.FIREBASEAUTH.getCurrentUser();
-                        if (!user.isEmailVerified()) {
+                        firebaseUser = Data.FIREBASEAUTH.getCurrentUser();///&&&&&&&&&&&&&&&&&
+                        if (!firebaseUser.isEmailVerified()) {
                             Toast.makeText(LoginActivity.this, "please verify your account " + Data.FIREBASEAUTH.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(LoginActivity.this, "uid="+user.getUid() + Data.FIREBASEAUTH.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
+                         //   Log.i(TAG, "onComplete: xxxxxxxxxxxxxxxx"+Data.FIREBASEAUTH.getCurrentUser().getUid());
 
                         } else {
 
                             Toast.makeText(LoginActivity.this, "verified account ", Toast.LENGTH_LONG).show();
+                               Log.i(TAG, "onComplete: uidxx"+Data.FIREBASEAUTH.getCurrentUser().getUid());
+                            Toast.makeText(LoginActivity.this, "verified account "+Data.FIREBASEAUTH.getCurrentUser().getUid(), Toast.LENGTH_LONG).show();
 
+                            SharedPreferences preferences2 = getSharedPreferences("c", Context.MODE_PRIVATE);
+                            preferences2.edit().putString("id", Data.FIREBASEAUTH.getCurrentUser().getUid()).apply();
                             //Toast.makeText(LoginActivity.this, "correct user", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
+                            finish();
                         }
 
                     } else {
                         String errorMessage = task.getException().getLocalizedMessage();
                         Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_LONG).show();
-                        Log.i(TAG, "onComplete: " + errorMessage);
+                        Log.i(TAG, "onComplete:error " + errorMessage);
 
 
                     }
@@ -304,8 +305,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
-
-
 
 
 }

@@ -15,7 +15,6 @@ import com.example.androidproject.R;
 
 public class RegisterActivity extends AppCompatActivity {
 ImageView logo;
-EditePicture editePicture;
 TextView tvGOlogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
@@ -34,9 +35,11 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -57,6 +60,8 @@ public class AddTripActivity extends AppCompatActivity {
     public static ArrayList<String> repeatList;
     public static ArrayList<String> wayList;
     public static DatePickerDialog.OnDateSetListener listenerDate;
+    DatabaseReference scoresRef2;
+    DatabaseReference scoresRef1;
     Calendar calendar = Calendar.getInstance();
     final int year = calendar.get(Calendar.YEAR);
     final int month = calendar.get(Calendar.MONTH);
@@ -82,8 +87,16 @@ final String TAG="AddTripActivity";
         setContentView(R.layout.activity_add_trip);
         initialize();
         Data.USER= Data.FIREBASEAUTH.getCurrentUser();
-        //Log.i(TAG, "onCreate: uidddd"+user.getUid());
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        Log.i(TAG, "onCreate: uidddddddddddddddddddddddddddddddddd"+MainActivity.storedUid);
         AddAdapter.screen=1;
+         scoresRef2 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedUid);
+        scoresRef2.keepSynced(true);
+
+
+       scoresRef1 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference);
+        scoresRef1.keepSynced(true);
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), Data.KEYMAP);
         }
@@ -200,6 +213,21 @@ final String TAG="AddTripActivity";
 
         String storedPreference = preferences.getString("x", "null");
         Log.i(TAG, "onCreate: token= "+storedPreference);
+
+//        DatabaseReference scoresRef = FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid());
+//        scoresRef.keepSynced(true);
+//
+//
+//        DatabaseReference scoresRef2 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference);
+//        scoresRef2.keepSynced(true);
+
+
+        //
+      
+      
+      
+              if(!MainActivity.storedPreference.equals("null")){
+
         Map<String, Object> map = new HashMap<>();
         map.put("endPoint", edEndPoint.getText().toString());
         map.put("startPoint", edStartPoint.getText().toString());
@@ -216,7 +244,7 @@ final String TAG="AddTripActivity";
         map.put("date", tvDate.getText().toString());
 
 
-        FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()).push().setValue(map)
+       scoresRef1.push().setValue(map)
 
                     .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
@@ -236,27 +264,38 @@ final String TAG="AddTripActivity";
 
             FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
 
+                });*/
+            }
+        else if(! MainActivity.storedUid.equals("no id exist")){
+             Map<String, Object> map = new HashMap<>();
+        map.put("endPoint", edEndPoint.getText().toString());
+        map.put("startPoint", edStartPoint.getText().toString());
+        map.put("tripName", edTripName.getText().toString());
+        map.put("repeat", repeat.getText().toString());
+        map.put("way", way.getText().toString());
+        map.put("status", Data.UPCOMING);
+        map.put("latLogEnd", endMapLatLong);
+        map.put("endLat", endLat);
+        map.put("endLong", endLong);
+        map.put("startLat", startLat);
+        map.put("startLong", startLong);
+        map.put("alarm", tvTime.getText().toString());
+        map.put("date", tvDate.getText().toString());
+
+          
+          
+            scoresRef2.push().setValue(map)
+
                     .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
                         Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
 
                     });
-            map.put("status", Data.UPCOMINGR2);
-            map.put("alarm", tvTimeBack.getText().toString());
-            map.put("date", tvDateBack.getText().toString());
+    
+                    }
+        }
 
-            FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
-
-                    .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
-
-                    });
-
-        }else {
-             */
-
-    }
+    
 
     private void handleError(){
         if(edEndPoint.getText().toString()==""){
