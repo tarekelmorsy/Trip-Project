@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.androidproject">
 
     <!--
@@ -9,6 +10,9 @@
     -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -49,6 +53,8 @@
             android:name=".Registeration.SplashScreen"
             android:exported="true"
             android:label="@string/title_activity_maps">
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,6 +71,14 @@
             android:enabled="true"
             android:exported="true" />
 
+            android:name=".reciever.DialogActivity"
+            android:theme="@style/Theme.AppCompat.transparent"
+            android:exported="false" />
+
+
+        <activity
+            android:name=".Registeration.LoginFaceBook"
+            android:exported="false" />
         <activity
             android:name=".Registeration.RegisterActivity"
             android:exported="false" />
@@ -91,7 +105,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/fb_login_protocol_scheme" />
+                <data android:scheme="@string/fb_login_protocol_scheme"
+                    tools:ignore="AppLinkUrlError,ManifestResource" />
             </intent-filter>
         </activity>
 
