@@ -26,13 +26,8 @@ public class Trip {
         this.endLat = endLat;
     }
 
-    public double getStartLat() {
-        return startLat;
-    }
 
-    public void setStartLat(double startLat) {
-        startLat = startLat;
-    }
+
 
     public double getEndLong() {
         return endLong;
@@ -42,12 +37,20 @@ public class Trip {
         this.endLong = endLong;
     }
 
+    public double getStartLat() {
+        return startLat;
+    }
+
+    public void setStartLat(double startLat) {
+        this.startLat = startLat;
+    }
+
     public double getStartLong() {
         return startLong;
     }
 
     public void setStartLong(double startLong) {
-        startLong = startLong;
+        this.startLong = startLong;
     }
 
     public String getLatLogEnd() {

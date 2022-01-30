@@ -194,7 +194,6 @@ final String TAG="AddTripActivity";
 
     private void insertData() {
 
-        //Log.i(TAG, "onCreate: uid= "+user.getUid());// for email data user
 
         Data.USER= Data.FIREBASEAUTH.getCurrentUser();
         SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
@@ -213,6 +212,8 @@ final String TAG="AddTripActivity";
         map.put("endLong", endLong);
         map.put("startLat", startLat);
         map.put("startLong", startLong);
+        map.put("alarm", tvTime.getText().toString());
+        map.put("date", tvDate.getText().toString());
 
 
         FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()).push().setValue(map)

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.androidproject.Registeration.LoginActivity;
@@ -36,19 +37,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 final String TAG="MainActivity";
-FloatingActionButton  ftLogOut;
-     DrawerLayout drawer;
+      DrawerLayout drawer;
     private AppBarConfiguration mAppBarConfiguration;
     BottomNavigationView bottomNav;
     ActionBarDrawerToggle actionBarDrawerToggle;
-    int lang_selected;
-    Context context;
-    Resources resources;
+
+    TextView textView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //ftLogOut=findViewById(R.id.floatingActionButton2);
+
+        textView=findViewById(R.id.tvNameUser);
        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
         SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
         setUpToolbar();
@@ -64,27 +66,12 @@ FloatingActionButton  ftLogOut;
 
 
 }
-        if(LocaleHelper.getLanguage(MainActivity.this).equalsIgnoreCase("en"))
-        {
-            context = LocaleHelper.setLocale(MainActivity.this,"en");
-            resources =context.getResources();
-            Toast.makeText(MainActivity.this, "ENGLISH", Toast.LENGTH_SHORT).show();
-            setTitle(resources.getString(R.string.app_name));
-            lang_selected = 0;
-        }else if(LocaleHelper.getLanguage(MainActivity.this).equalsIgnoreCase("ar")){
-            context = LocaleHelper.setLocale(MainActivity.this,"ar");
-            resources =context.getResources();
-            Toast.makeText(MainActivity.this, "اللغة العربية", Toast.LENGTH_SHORT).show();
-            setTitle(resources.getString(R.string.app_name));
-            lang_selected =1;
-        }
-        else if(LocaleHelper.getLanguage(MainActivity.this).equalsIgnoreCase("ar")){
-            context = LocaleHelper.setLocale(MainActivity.this,"ar");
-            resources =context.getResources();
-            Toast.makeText(MainActivity.this, "اللغة العربية", Toast.LENGTH_SHORT).show();
-            setTitle(resources.getString(R.string.app_name));
-            lang_selected =2;
-        }
+
+        Toast.makeText(MainActivity.this, Data.USER.getEmail().toString(), Toast.LENGTH_SHORT).show();
+
+
+
+
 
         mAppBarConfiguration = new AppBarConfiguration.Builder()
                 .setOpenableLayout(drawer)
@@ -102,41 +89,7 @@ FloatingActionButton  ftLogOut;
                         break;
                     }
                     case R.id.nav_ar: {
-                    final String[] Language = {"ENGLISH","ar"};
-                final int checkItem;
-                Log.d("Clicked","Clicked");
-                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                dialogBuilder.setTitle("Select a Language")
-                        .setSingleChoiceItems(Language, lang_selected, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(MainActivity.this, Language[i], Toast.LENGTH_SHORT).show();
 
-                                if(Language[i].equals("ENGLISH")){
-                                    context = LocaleHelper.setLocale(MainActivity.this,"en");
-                                    resources =context.getResources();
-                                    lang_selected = 0;
-                                    Toast.makeText(MainActivity.this, "ENGLISH", Toast.LENGTH_SHORT).show();
-                                    setTitle(resources.getString(R.string.app_name));
-                                }
-                                if(Language[i].equals("ar"))
-                                {
-                                    context = LocaleHelper.setLocale(MainActivity.this,"hi");
-                                    resources =context.getResources();
-                                    lang_selected = 1;
-                                    Toast.makeText(MainActivity.this, Language[i], Toast.LENGTH_SHORT).show();
-                                    setTitle(resources.getString(R.string.app_name));
-                                }
-
-                            }
-                        })
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                dialogBuilder.create().show();
             }
 
 

@@ -296,6 +296,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                     map.put("tripName", edTripName.getText().toString());
                     map.put("repeat", repeat.getText().toString());
                     map.put("way", way.getText().toString());
+
                     map.put("status",trip.getWay());
 
                     FirebaseDatabase.getInstance().getReference("trips"+user.getUid()).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -437,6 +438,11 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             map.put("repeat", trip.getRepeat());
             map.put("way", trip.getWay());
             map.put("status", Data.DONE);
+            map.put("endLat", trip.getEndLat());
+            map.put("latLogEnd", trip.getLatLogEnd());
+            map.put("endLong", trip.getEndLong());
+            map.put("startLat", trip.getStartLat());
+            map.put("startLong", trip.getStartLong());
             if (screen == 1) {
                 FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
             } else if (screen == 2) {
