@@ -18,6 +18,7 @@ import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
  import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class CancelFragment extends Fragment {
@@ -28,9 +29,13 @@ public class CancelFragment extends Fragment {
             ViewGroup container, Bundle savedInstanceState) {
 
         View view= inflater.inflate(R.layout.fragment_cancel, container, false);
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
+        DatabaseReference scoresRef = FirebaseDatabase.getInstance().getReference().child("tripCancel"+ MainActivity.storedPreference);
+        scoresRef.keepSynced(true);
 
-
+        DatabaseReference scoresRef2 = FirebaseDatabase.getInstance().getReference().child("tripCancel"+ MainActivity.storedUid);
+        scoresRef2.keepSynced(true);
         recyclerView = view.findViewById(R.id.recCancel);
         AddAdapter.screen=2;
 
@@ -39,14 +44,14 @@ public class CancelFragment extends Fragment {
 
         if(!MainActivity.storedPreference.equals("null")){
         FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("tripCancel"+ MainActivity.storedPreference), Trip.class).build();
+                .setQuery(scoresRef, Trip.class).build();
 
         addAdapter = new AddAdapter(options);
         recyclerView.setAdapter(addAdapter);}
-        else if( Data.USER.getUid()!=null){
+        else if(! MainActivity.storedUid.equals("no id exist")){
 
             FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                    .setQuery(FirebaseDatabase.getInstance().getReference().child("tripCancel"+ Data.USER.getUid()), Trip.class).build();
+                    .setQuery(scoresRef2, Trip.class).build();
 
             addAdapter = new AddAdapter(options);
             recyclerView.setAdapter(addAdapter);

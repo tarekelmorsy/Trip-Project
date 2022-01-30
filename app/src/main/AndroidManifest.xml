@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.androidproject">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -9,15 +10,15 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+
         android:theme="@style/Theme.AndroidProject">
+
         <activity
             android:name=".CancelActivity"
             android:exported="false" />
@@ -43,36 +44,27 @@
         <activity
             android:name=".ui.HomeActivity"
             android:exported="true" />
+
         <activity
-            android:name=".MainActivity"
+            android:name=".Registeration.SplashScreen"
             android:exported="true"
-            android:label="@string/title_activity_maps" >
-
-
+            android:label="@string/title_activity_maps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
-
         </activity>
-
         <activity
             android:name=".reciever.DialogActivity2"
-            android:theme="@style/Theme.AppCompat.transparent"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.transparent" />
 
         <receiver
             android:name=".reciever.AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
 
-
-        <activity
-            android:name=".Registeration.LoginFaceBook"
-            android:exported="false" />
         <activity
             android:name=".Registeration.RegisterActivity"
             android:exported="false" />
@@ -83,18 +75,18 @@
             android:name=".Registeration.LoginEmail"
             android:exported="false" />
         <activity
-            android:name=".Registeration.SplashScreen"
-            android:exported="true">
-
-        </activity>
+            android:name=".MainActivity"
+            android:exported="true"></activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+        <service android:name=".SimpleService"/>
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
-            <intent-filter><action android:name="android.intent.action.VIEW" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -106,7 +98,6 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
     </application>
 
 </manifest>

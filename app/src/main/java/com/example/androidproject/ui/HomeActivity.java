@@ -1,10 +1,14 @@
 package com.example.androidproject.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.androidproject.R;
+import com.example.androidproject.SimpleService;
 import com.example.androidproject.databinding.ActivityHomeBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.FirebaseDatabase;
+import com.siddharthks.bubbles.FloatingBubblePermissions;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -24,6 +28,10 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(

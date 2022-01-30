@@ -26,7 +26,9 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.siddharthks.bubbles.FloatingBubblePermissions;
 
 import java.util.Calendar;
 
@@ -41,40 +43,38 @@ public class HomeFragment extends Fragment {
     Calendar calendar;
 FirebaseUser user;
     public  FirebaseAuth FIREBASEAUTH;
-
+    DatabaseReference scoresRef;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         AddAdapter.screen=1;
-
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         FIREBASEAUTH=FirebaseAuth.getInstance();
+        DatabaseReference scoresRef2 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedUid);
+        scoresRef2.keepSynced(true);
+        DatabaseReference scoresRef1 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference);
+        scoresRef1.keepSynced(true);
+
         user= FIREBASEAUTH.getCurrentUser();
-
-
-
         recyclerView = binding.recUpcoming;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         if(!MainActivity.storedPreference.equals("null")) {
             FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                    .setQuery(FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference), Trip.class).build();
+                    .setQuery(scoresRef, Trip.class).build();
             //options.getSnapshots().get(0);
             addAdapter = new AddAdapter(options);
             recyclerView.setAdapter(addAdapter);
         }
 
-        else if(Data.USER.getUid()!=null){
+        else if(! MainActivity.storedUid.equals("no id exist")){
             FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
-                    .setQuery(FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()), Trip.class).build();
+                    .setQuery(scoresRef2, Trip.class).build();
             //options.getSnapshots().get(0);
             addAdapter = new AddAdapter(options);
             recyclerView.setAdapter(addAdapter);
         }
-
-
-
         btAdd=binding.floatingActionButton;
         btAdd.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), AddTripActivity.class));
@@ -82,13 +82,7 @@ FirebaseUser user;
         });
 
     View root = binding.getRoot();
-
         return root;
-
-
-
-
-
     }
 
     @Override

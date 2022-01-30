@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.androidproject.Registeration.LoginActivity;
+import com.example.androidproject.Registeration.SplashScreen;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.ui.ui.cancel.CancelFragment;
 import com.example.androidproject.ui.ui.upcoming.HomeFragment;
@@ -23,6 +24,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,18 +33,36 @@ public class MainActivity extends AppCompatActivity {
     final String TAG="MainActivity";
 FloatingActionButton  ftLogOut;
    public static String storedPreference;
+    public static String storedUid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ftLogOut=findViewById(R.id.floatingActionButton2);
-       Data.USER= Data.FIREBASEAUTH.getCurrentUser();
+      //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);//************8
+
+        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
+
+        DatabaseReference scoresReft1 = FirebaseDatabase.getInstance().getReference().child("trips"+ MainActivity.storedPreference);
+        scoresReft1.keepSynced(true);
+
+        DatabaseReference scoresReft2 = FirebaseDatabase.getInstance().getReference().child("trips"+ MainActivity.storedUid);
+        scoresReft2.keepSynced(true);
         SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
 
          storedPreference = preferences.getString("x", "null");
-        Log.i(TAG, "onCreate: token= "+storedPreference);
 
-        if(Data.USER==null&&storedPreference.equals("null") )
+        SharedPreferences preferencesUid = getSharedPreferences("c", Context.MODE_PRIVATE);
+
+        storedUid = preferencesUid.getString("id", "no id exist");
+
+
+        Log.i(TAG, "onCreate: token= "+storedPreference);
+        Log.i(TAG, "onCreate: uidxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx= "+storedUid);
+
+
+        if(storedUid.equals("no id exist")&&storedPreference.equals("null") )
 {
     startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
@@ -52,11 +73,16 @@ FloatingActionButton  ftLogOut;
 }
 
 
+
+
+
+
         ftLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Data.FIREBASEAUTH.signOut();
         startActivity(new Intent(MainActivity.this,LoginActivity.class));
+        finish();
             }
         });
 

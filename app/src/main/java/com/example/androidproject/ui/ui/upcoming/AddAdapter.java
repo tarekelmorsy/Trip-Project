@@ -3,11 +3,13 @@ package com.example.androidproject.ui.ui.upcoming;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -35,6 +37,7 @@ import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
+import com.example.androidproject.SimpleService;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
 import com.example.androidproject.ui.AddTripActivity;
@@ -55,6 +58,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
+import com.siddharthks.bubbles.FloatingBubblePermissions;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,7 +67,7 @@ import java.util.Map;
 
 public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewHolder> {
     int i = 0;
- static ArrayList<String> tripDate= new ArrayList<>();
+    static ArrayList<String> tripDate= new ArrayList<>();
     static ArrayList<String> tripHour= new ArrayList<>();
     static ArrayList<String> tripStatus= new ArrayList<>();
     AlertDialog alertDialog;
@@ -91,7 +95,25 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             viewBinderHelper.setOpenOnlyOne(true);
         viewBinderHelper.bind(holder.swipeRefreshLayout, String.valueOf(trip.getTripName()));
         viewBinderHelper.closeLayout(trip.getTripName());
+       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         user= firebaseAuth.getCurrentUser();
+
+        DatabaseReference scoresRefh1 = FirebaseDatabase.getInstance().getReference().child("history"+ MainActivity.storedPreference);
+        scoresRefh1.keepSynced(true);
+        DatabaseReference scoresRefh2= FirebaseDatabase.getInstance().getReference().child("history"+ MainActivity.storedUid);
+        scoresRefh2.keepSynced(true);
+        DatabaseReference scoresRefc1 = FirebaseDatabase.getInstance().getReference().child("tripCancel"+ MainActivity.storedPreference);
+        scoresRefc1.keepSynced(true);
+
+        DatabaseReference scoresRefc2 = FirebaseDatabase.getInstance().getReference().child("tripCancel"+ MainActivity.storedUid);
+        scoresRefc2.keepSynced(true);
+        DatabaseReference scoresReft1 = FirebaseDatabase.getInstance().getReference().child("trips"+ MainActivity.storedPreference);
+        scoresReft1.keepSynced(true);
+
+        DatabaseReference scoresReft2 = FirebaseDatabase.getInstance().getReference().child("trips"+ MainActivity.storedUid);
+        scoresReft2.keepSynced(true);
+
+
 
 //        if(trip.getUID().equals(user.getUid())) {
 
@@ -139,8 +161,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                                             Log.i("AddAdapter", "onChildAdded: result "+sb.toString());
 
                                             sb.setLength(0);
-if(!MainActivity.storedPreference.equals("null")){
-                                            FirebaseDatabase.getInstance().getReference("trips" + MainActivity.storedPreference).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            if(!MainActivity.storedPreference.equals("null")){
+                                                scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void unused) {
 
@@ -153,9 +175,9 @@ if(!MainActivity.storedPreference.equals("null")){
                                                 }
                                             }) ;}
 
-else if(Data.USER.getUid()!=null){
+else if(! MainActivity.storedUid.equals("no id exist")){
 
-    FirebaseDatabase.getInstance().getReference("trips" + Data.USER.getUid()).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
         @Override
         public void onSuccess(Void unused) {
 
@@ -234,10 +256,10 @@ else if(Data.USER.getUid()!=null){
 
 if(!MainActivity.storedPreference.equals("null")){
             builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
-                FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference).child(getRef(position).getKey()).removeValue();
-                FirebaseDatabase.getInstance().getReference().child("history" + MainActivity.storedPreference).push().setValue(map);
+                scoresReft1.child(getRef(position).getKey()).removeValue();
+                scoresRefh1.push().setValue(map);
 
-                FirebaseDatabase.getInstance().getReference().child("tripCancel" + MainActivity.storedPreference).push().setValue(map)
+                scoresRefc1.push().setValue(map)
                         .addOnSuccessListener(unused ->
                                 Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> {
@@ -255,13 +277,13 @@ if(!MainActivity.storedPreference.equals("null")){
 
         }
 
-        else if(Data.USER.getUid()!=null){
+        else if(! MainActivity.storedUid.equals("no id exist")){
 
     builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
-        FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()).child(getRef(position).getKey()).removeValue();
-        FirebaseDatabase.getInstance().getReference().child("history" + Data.USER.getUid()).push().setValue(map);
+        scoresReft2.child(getRef(position).getKey()).removeValue();
+        scoresRefh2.push().setValue(map);
 
-        FirebaseDatabase.getInstance().getReference().child("tripCancel" + Data.USER.getUid()).push().setValue(map)
+        scoresRefc2.push().setValue(map)
                 .addOnSuccessListener(unused ->
                         Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> {
@@ -296,10 +318,16 @@ if(!MainActivity.storedPreference.equals("null")){
             if (i == 1) {
                 holder.linearLayout.setVisibility(View.VISIBLE);
                 i++;
+
+
             } else {
                 holder.linearLayout.setVisibility(View.GONE);
                 i = 1;
             }
+
+
+
+
         });
 
 
@@ -403,7 +431,7 @@ if(!MainActivity.storedPreference.equals("null")){
                     map.put("way", way.getText().toString());
                     map.put("status", Data.UPCOMING);
 if(!MainActivity.storedPreference.equals("null")){///
-                    FirebaseDatabase.getInstance().getReference("trips" + MainActivity.storedPreference).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+    scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
@@ -419,9 +447,9 @@ if(!MainActivity.storedPreference.equals("null")){///
                     });
                 }
 
-                else if(Data.USER.getUid()!=null){
+                else if(! MainActivity.storedUid.equals("no id exist")){
 
-    FirebaseDatabase.getInstance().getReference("trips" + Data.USER.getUid()).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+    scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
         @Override
         public void onSuccess(Void unused) {
             Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
@@ -456,10 +484,10 @@ if(!MainActivity.storedPreference.equals("null")){///
                     map.put("way", way.getText().toString());
                     map.put("status", Data.CANCEL);
             if(!MainActivity.storedPreference.equals("null")){
-                    FirebaseDatabase.getInstance().getReference().child("history" + MainActivity.storedPreference).push().setValue(map);
+                scoresRefh1.push().setValue(map);
 
 
-                    FirebaseDatabase.getInstance().getReference("tripCancel" + MainActivity.storedPreference).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                scoresRefc1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
@@ -474,11 +502,11 @@ if(!MainActivity.storedPreference.equals("null")){///
                         }
                     });
                 }////
-                    else if(Data.USER.getUid()!=null){
-                FirebaseDatabase.getInstance().getReference().child("history" + Data.USER.getUid()).push().setValue(map);
+                    else if(! MainActivity.storedUid.equals("no id exist")){
+                scoresRefh2.push().setValue(map);
 
 
-                FirebaseDatabase.getInstance().getReference("tripCancel" + Data.USER.getUid()).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                scoresRefc2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
@@ -519,28 +547,28 @@ if(!MainActivity.storedPreference.equals("null")){///
                 builder.setPositiveButton("Delete", (dialog, which) -> {
 if(!MainActivity.storedPreference.equals("null")){
                     if (screen == 1) {
-                        FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference).child(getRef(position).getKey()).removeValue();
+                        scoresReft1.child(getRef(position).getKey()).removeValue();
                     } else if (screen == 2) {
-                        FirebaseDatabase.getInstance().getReference().child("tripCancel" + MainActivity.storedPreference).child(getRef(position).getKey()).removeValue();
+                        scoresRefc1.child(getRef(position).getKey()).removeValue();
 
 
                     } else if (screen == 3) {
-                        FirebaseDatabase.getInstance().getReference().child("history" + MainActivity.storedPreference).child(getRef(position).getKey()).removeValue();
+                        scoresRefh1.child(getRef(position).getKey()).removeValue();
 
 
                     }
 
                 }
-else if(Data.USER.getUid()!=null){
+else if(! MainActivity.storedUid.equals("no id exist")){
 
     if (screen == 1) {
-        FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()).child(getRef(position).getKey()).removeValue();
+        scoresReft2.child(getRef(position).getKey()).removeValue();
     } else if (screen == 2) {
-        FirebaseDatabase.getInstance().getReference().child("tripCancel" + Data.USER.getUid()).child(getRef(position).getKey()).removeValue();
+        scoresRefc2.child(getRef(position).getKey()).removeValue();
 
 
     } else if (screen == 3) {
-        FirebaseDatabase.getInstance().getReference().child("history" + Data.USER.getUid()).child(getRef(position).getKey()).removeValue();
+        scoresRefh2.child(getRef(position).getKey()).removeValue();
 
 
     }
@@ -568,38 +596,48 @@ else if(Data.USER.getUid()!=null){
             map.put("repeat", trip.getRepeat());
             map.put("way", trip.getWay());
             map.put("status", Data.DONE);
+
+
+
+
             if(MainActivity.storedPreference.equals("null")){
             if (screen == 1) {
-                FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference).child(getRef(position).getKey()).removeValue();
+                scoresReft1.child(getRef(position).getKey()).removeValue();
             } else if (screen == 2) {
-                FirebaseDatabase.getInstance().getReference().child("tripCancel" +  MainActivity.storedPreference).child(getRef(position).getKey()).removeValue();
-
-
+                scoresRefc1.child(getRef(position).getKey()).removeValue();
             }
-            FirebaseDatabase.getInstance().getReference().child("history" +  MainActivity.storedPreference).push().setValue(map)
+                scoresRefh1.push().setValue(map)
                     .addOnSuccessListener(unused ->
                             Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
                         Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
-
                     });
 
+                FloatingBubblePermissions.startPermissionRequest((Activity) holder.btStart.getContext());
+                Intent intent= new Intent(getApplicationContext(), SimpleService.class);
+                intent.putExtra("note",trip.getNotes());
+                getApplicationContext().startService(intent);
+
         }
-    else if (Data.USER.getUid()!=null){
+    else if (! MainActivity.storedUid.equals("no id exist")){
                 if (screen == 1) {
-                    FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid()).child(getRef(position).getKey()).removeValue();
+                    scoresReft2.child(getRef(position).getKey()).removeValue();
                 } else if (screen == 2) {
-                    FirebaseDatabase.getInstance().getReference().child("tripCancel" +  Data.USER.getUid()).child(getRef(position).getKey()).removeValue();
-
-
+                    scoresRefc2.child(getRef(position).getKey()).removeValue();
                 }
-                FirebaseDatabase.getInstance().getReference().child("history" +  Data.USER.getUid()).push().setValue(map)
+                scoresRefh2.push().setValue(map)
                         .addOnSuccessListener(unused ->
                                 Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> {
                             Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
 
                         });
+
+
+                FloatingBubblePermissions.startPermissionRequest((Activity) holder.btStart.getContext());
+                Intent intent= new Intent(getApplicationContext(), SimpleService.class);
+                intent.putExtra("note",trip.getNotes());
+                getApplicationContext().startService(intent);
             }
 
 
@@ -637,7 +675,6 @@ else if(Data.USER.getUid()!=null){
             ivSetNotes=itemView.findViewById(R.id.ivSetNotes);
             swipeRefreshLayout = itemView.findViewById(R.id.main_container);
             edNote=itemView.findViewById(R.id.ed_note_dialog);
-
         }
 
         public void setNotes(String s) {
