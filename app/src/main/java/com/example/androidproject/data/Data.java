@@ -13,11 +13,14 @@ public class Data {
     public static final String CANCEL="2";
  
     public static final String DONE ="3";
- 
+    public static final String UPCOMINGR1="4";
+    public static final String UPCOMINGR2="5";
+
+
     public static final String KEYMAP="AIzaSyAtaH8N_lSkKtae12pgySJsPbhBHolTSlY";
    public static FirebaseAuth FIREBASEAUTH=FirebaseAuth.getInstance();
 
-    public static FirebaseUser USER;
+    public static FirebaseUser USER=FIREBASEAUTH.getCurrentUser();
 
 
 
