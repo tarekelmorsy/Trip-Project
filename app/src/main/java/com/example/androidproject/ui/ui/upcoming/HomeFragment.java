@@ -17,7 +17,10 @@ import com.example.androidproject.data.Trip;
 import com.example.androidproject.databinding.FragmentHomeBinding;
 import com.example.androidproject.ui.AddTripActivity;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -54,6 +57,13 @@ FirebaseUser user;
 
         recyclerView = binding.recUpcoming;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+          FirebaseRecyclerOptions<Trip> options=new FirebaseRecyclerOptions.Builder<Trip>()
+                .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid()),Trip.class).build();
+          //options.getSnapshots().get(0);
+
+         addAdapter = new AddAdapter(options);
+        recyclerView.setAdapter(addAdapter);
+
 
         if(!MainActivity.storedPreference.equals("null")) {
             FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
@@ -78,6 +88,7 @@ FirebaseUser user;
 
     View root = binding.getRoot();
         return root;
+
     }
 
     @Override

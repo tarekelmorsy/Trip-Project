@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
+import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -285,13 +286,12 @@ final String TAG="AddTripActivity";
           
           
             scoresRef2.push().setValue(map)
-
                     .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
                         Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
-
                     });
-    
+            DataForAlarm.addAlarmForTrip(map);
+
                     }
         }
 

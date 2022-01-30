@@ -42,11 +42,14 @@ import com.example.androidproject.R;
 import com.example.androidproject.SimpleService;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
+import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.AddTripActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
@@ -221,6 +224,7 @@ else if(! MainActivity.storedUid.equals("no id exist")){
 
 
         }
+
         else if (trip.getStatus().equals(Data.UPCOMINGR1)) {
             holder.tvStatus.setText(R.string.done);
             holder.tvRepeat.setVisibility(View.VISIBLE);
@@ -235,9 +239,6 @@ else if(! MainActivity.storedUid.equals("no id exist")){
         tripDate.add(position,trip.getDate());
         tripHour.add(position,trip.getAlarm());
         tripStatus.add(position,trip.getStatus());
-
- 
-
 
 
         holder.btCancel.setOnClickListener(v -> {
@@ -261,7 +262,10 @@ else if(! MainActivity.storedUid.equals("no id exist")){
             AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
             builder.setTitle("Are You Sure?");
             builder.setMessage("Cancel this Trip.");
-
+            builder.setPositiveButton("Yes", (dialog, which) -> {
+                FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
+                FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map);
+              
 if(!MainActivity.storedPreference.equals("null")){
             builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
                 scoresReft1.child(getRef(position).getKey()).removeValue();
@@ -272,15 +276,16 @@ if(!MainActivity.storedPreference.equals("null")){
                                 Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> {
                             Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
-
                         });
-
-
+                DataForAlarm.deleteAlarmForOneTrip(map);
             });
             builder.setNegativeButton("Cancel", (dialog, which) -> {
                 Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
             });
             builder.show();
+
+        });
+
 
 
         }
@@ -312,12 +317,8 @@ if(!MainActivity.storedPreference.equals("null")){
 
 }
 
-
-
-
-
-
         });///
+
 
         holder.ivNotes.setOnClickListener(v -> {
             // Toast.makeText(v.getContext(), "position: "+position, Toast.LENGTH_SHORT).show();
@@ -483,6 +484,7 @@ if(!MainActivity.storedPreference.equals("null")){///
 
 
 
+                    deleteAndFillAlarm();
 
                 } else if (screen == 2) {///
                     Map<String, Object> map = new HashMap<>();
@@ -509,7 +511,6 @@ if(!MainActivity.storedPreference.equals("null")){///
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
-
                         }
                     });
                 }////
@@ -546,6 +547,7 @@ if(!MainActivity.storedPreference.equals("null")){///
 
              });
 
+                    deleteAndFillAlarm();
 
         });
 
@@ -564,7 +566,8 @@ if(!MainActivity.storedPreference.equals("null")){
 
 
                     } else if (screen == 3) {
-                        scoresRefh1.child(getRef(position).getKey()).removeValue();
+                     scoresRefh1.child(getRef(position).getKey()).removeValue();
+
 
 
                     }
@@ -587,6 +590,7 @@ else if(! MainActivity.storedUid.equals("no id exist")){
 }
 
 
+                    deleteAndFillAlarm();
 
 
                 });
@@ -706,7 +710,9 @@ map.put("endLat", trip.getEndLat());
                 Intent intent= new Intent(getApplicationContext(), SimpleService.class);
                 intent.putExtra("note",trip.getNotes());
                 getApplicationContext().startService(intent);
+
             }
+                  DataForAlarm.deleteAlarmForOneTrip(map);
 
 
 
@@ -781,5 +787,51 @@ map.put("endLat", trip.getEndLat());
                 }
             }
         }
+    }
+
+
+    public static void deleteAndFillAlarm(){
+
+        ArrayList<Trip> arrayTrips = new ArrayList<>();
+        DataForAlarm.DeleteAllAlarms();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid());
+
+        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                    Trip trip = dataSnapshot.getValue(Trip.class);
+                    arrayTrips.add(trip);
+                }
+                Log.i("Main", "onDeleteandFill: Array Size is "+ arrayTrips.size());
+                //Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
+                DataForAlarm.setDataForAlarm(arrayTrips);
+            }
+        });
+
+
+        /*databaseReference.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Trip trip = dataSnapshot.getValue(Trip.class);
+                    arrayTrips.add(trip);
+                }
+                Log.i("Main", "onDeleteandFill: Array Size is "+ arrayTrips.size());
+                Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
+                DataForAlarm.setDataForAlarm(arrayTrips);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
+
+//        FirebaseRecyclerOptions<Trip> options=new FirebaseRecyclerOptions.Builder<Trip>()
+//                .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid()),Trip.class).build();
+
+
     }
 }
