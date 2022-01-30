@@ -1,30 +1,43 @@
 package com.example.androidproject.reciever;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.example.androidproject.R;
+import com.example.androidproject.data.Trip;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
 
 public class DialogActivity extends AppCompatActivity {
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     private NotificationManager mNotifyManager;
     private static final int NOTIFICATION_ID = 0;
     public MediaPlayer mediaPlayer;
+    public String keyOfTrip ;
+
+    FirebaseAuth firebaseAuth=FirebaseAuth.getInstance();
+    FirebaseUser user;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,18 +47,56 @@ public class DialogActivity extends AppCompatActivity {
         mediaPlayer= MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI);
         mediaPlayer.start();
 
+        user= firebaseAuth.getCurrentUser();
+
+        keyOfTrip = getIntent().getStringExtra("KEY");
+        Log.i("Main", "onDialogeActivity: "+keyOfTrip);
+
+
         AlertDialog.Builder alertdialog = new AlertDialog.Builder(DialogActivity.this);
         alertdialog.setCancelable(false);   // that make the dialog cant cancelled until u click inside the dialog itself
         alertdialog.setTitle("TRIP REMINDER");
         alertdialog.setMessage("Select Start , Snooze , Cancel.");
 
 
+        /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid());
+        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                    Trip trip = dataSnapshot.getValue(Trip.class);
+                    arrayTrips.add(trip);
+                }
+                Log.i("Main", "onArray:size= "+arrayTrips.size() );
+                for( int i =0 ; i<arrayTrips.size();i++){
+                    Trip trip = arrayTrips.get(i);
+                    String check = trip.getDate()+trip.getAlarm();
+                    Log.i("Main", "onArray: "+check );
+
+                    if ( check.equals(key)){
+                        myTrip=trip;
+                    }
+                }
+            }
+        });
+*/
+
+
         alertdialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                sendActionForCancel(keyOfTrip);
                 Toast.makeText(DialogActivity.this, "You pressed cancel.", Toast.LENGTH_SHORT).show();
                 dialogInterface.cancel();
                 mediaPlayer.stop();
+                /*FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
+                FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(myTrip);
+                FirebaseDatabase.getInstance().getReference().child("tripCancel"+user.getUid()).push().setValue(myTrip)
+                        .addOnSuccessListener(unused ->
+                                Toast.makeText(DialogActivity.this, "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(DialogActivity.this, "Error while Cancel", Toast.LENGTH_SHORT).show();
+                        });*/
                 finish();
 
             }
@@ -68,8 +119,8 @@ public class DialogActivity extends AppCompatActivity {
                 Toast.makeText(DialogActivity.this, "you pressed start.", Toast.LENGTH_SHORT).show();
                 //Intent intent1 = new Intent(DialogActivity2.this,MainActivity.class);
                // startActivity(intent1);
+                sendActionForStart(keyOfTrip);
                 mediaPlayer.stop();
-
             }
         });
         alertdialog.create().getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
@@ -109,7 +160,12 @@ public class DialogActivity extends AppCompatActivity {
     private NotificationCompat.Builder getNotificationBuilder(){
 
         Intent intent = new Intent(this, DialogActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
+        intent.putExtra("KEY",keyOfTrip);
+        Log.i("Main", "getNotificationBuilder: "+keyOfTrip);
+
+        // flag is important to send data in pending intent
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("TRIP REMINDER")
                 .setContentText("Start Now !")
@@ -119,5 +175,25 @@ public class DialogActivity extends AppCompatActivity {
 
         return notifyBuilder;
 
+    }
+
+    private void sendActionForCancel (String keyOfTrip ){
+        Data dataInput = new Data.Builder().putString("KEY",keyOfTrip).build();
+        WorkManager workManager = WorkManager.getInstance();
+        WorkRequest workRequest = new OneTimeWorkRequest.Builder(CancelFromDialog.class)
+                .addTag(keyOfTrip).setInputData(dataInput)
+                .build();
+        Log.i("Main", "onSendActionForCancel: "+keyOfTrip);
+        workManager.enqueue(workRequest);
+    }
+
+    private void sendActionForStart (String keyOfTrip ){
+        Data dataInput = new Data.Builder().putString("KEY",keyOfTrip).build();
+        WorkManager workManager = WorkManager.getInstance();
+        WorkRequest workRequest = new OneTimeWorkRequest.Builder(StartFromDialog.class)
+                .addTag(keyOfTrip).setInputData(dataInput)
+                .build();
+        Log.i("Main", "onSendActionForCancel: "+keyOfTrip);
+        workManager.enqueue(workRequest);
     }
 }

@@ -17,7 +17,10 @@ import com.example.androidproject.data.Trip;
 import com.example.androidproject.databinding.FragmentHomeBinding;
 import com.example.androidproject.ui.AddTripActivity;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 
 
@@ -43,6 +46,7 @@ public class HomeFragment extends Fragment {
           FirebaseRecyclerOptions<Trip> options=new FirebaseRecyclerOptions.Builder<Trip>()
                 .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid()),Trip.class).build();
           //options.getSnapshots().get(0);
+
          addAdapter = new AddAdapter(options);
         recyclerView.setAdapter(addAdapter);
 
@@ -56,9 +60,6 @@ public class HomeFragment extends Fragment {
     View root = binding.getRoot();
 
         return root;
-
-
-
 
 
     }

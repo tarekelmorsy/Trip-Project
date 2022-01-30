@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
+import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
@@ -192,6 +193,7 @@ final String TAG="AddTripActivity";
                     Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
 
                 });
+        DataForAlarm.addAlarmForTrip(map);
 
     }
 

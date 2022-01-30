@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.format.DateFormat;
@@ -32,17 +30,24 @@ import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
+import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.AddTripActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
@@ -53,9 +58,7 @@ import java.util.Map;
 
 public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewHolder> {
     int i = 0;
- static ArrayList<String> tripDate= new ArrayList<>();
-    static ArrayList<String> tripHour= new ArrayList<>();
-    static ArrayList<String> tripStatus= new ArrayList<>();
+
 
 
     public static int screen=1;
@@ -113,20 +116,6 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
         }
 
-        if (trip.getStatus().equals(1)){
-
-
-       }
-
-        tripDate.add(position,trip.getDate());
-        tripHour.add(position,trip.getAlarm());
-        tripStatus.add(position,trip.getStatus());
-
-
-       // Toast.makeText(holder.tvTime.getContext(),""+tripDate.size(), Toast.LENGTH_SHORT).show();
-
-
-
         holder.btCancel.setOnClickListener(v -> {
 
 
@@ -148,7 +137,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
             builder.setTitle("Are You Sure?");
             builder.setMessage("Cancel this Trip.");
-            builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
+            builder.setPositiveButton("Yes", (dialog, which) -> {
                 FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
                 FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map);
 
@@ -157,17 +146,13 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                                 Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                         .addOnFailureListener(e -> {
                             Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
-
                         });
-
-
+                DataForAlarm.deleteAlarmForOneTrip(map);
             });
             builder.setNegativeButton("Cancel", (dialog, which) -> {
                 Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
             });
             builder.show();
-
-
         });
 
         holder.ivNotes.setOnClickListener(v -> {
@@ -298,6 +283,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                         }
                     });
+                    deleteAndFillAlarm();
                 } else if (screen == 2) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("alarm", tvTime.getText().toString());
@@ -323,14 +309,11 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                         public void onFailure(@NonNull Exception e) {
                             Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
-
                         }
                     });
+                    deleteAndFillAlarm();
                 }
-
             });
-
-
         });
 
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
@@ -349,10 +332,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                     } else if (screen == 3) {
                         FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).child(getRef(position).getKey()).removeValue();
-
-
                     }
-
+                    deleteAndFillAlarm();
                 });
                 builder.setNegativeButton("Cancel", (dialog, which) -> {
                     Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
@@ -385,7 +366,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                         Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
 
                     });
-
+            DataForAlarm.deleteAlarmForOneTrip(map);
         });
 
     }
@@ -439,5 +420,51 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                 }
             }
         }
+    }
+
+
+    public static void deleteAndFillAlarm(){
+
+        ArrayList<Trip> arrayTrips = new ArrayList<>();
+        DataForAlarm.DeleteAllAlarms();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid());
+
+        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                    Trip trip = dataSnapshot.getValue(Trip.class);
+                    arrayTrips.add(trip);
+                }
+                Log.i("Main", "onDeleteandFill: Array Size is "+ arrayTrips.size());
+                //Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
+                DataForAlarm.setDataForAlarm(arrayTrips);
+            }
+        });
+
+
+        /*databaseReference.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Trip trip = dataSnapshot.getValue(Trip.class);
+                    arrayTrips.add(trip);
+                }
+                Log.i("Main", "onDeleteandFill: Array Size is "+ arrayTrips.size());
+                Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
+                DataForAlarm.setDataForAlarm(arrayTrips);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
+
+//        FirebaseRecyclerOptions<Trip> options=new FirebaseRecyclerOptions.Builder<Trip>()
+//                .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid()),Trip.class).build();
+
+
     }
 }
