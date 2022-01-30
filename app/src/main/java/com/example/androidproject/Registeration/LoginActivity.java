@@ -306,11 +306,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void signOut() {// for email
-
-        Data.FIREBASEAUTH.signOut();
-
-    }
 
 
 }

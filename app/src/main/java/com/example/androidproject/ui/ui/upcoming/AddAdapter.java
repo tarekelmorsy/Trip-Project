@@ -4,10 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +49,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -101,6 +105,9 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         holder.tvSeRepeat.setText((trip.getRepeat()));
         holder.tvSetWay.setText(trip.getWay());
 
+
+
+
         if (trip.getStatus().equals(Data.UPCOMING)) {
             holder.tvStatus.setText(R.string.upComing);
         } else if (trip.getStatus().equals(Data.CANCEL)) {
@@ -112,18 +119,22 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
 
         }
+        else if (trip.getStatus().equals(Data.UPCOMINGR1)) {
+            holder.tvStatus.setText(R.string.done);
+            holder.tvRepeat.setVisibility(View.VISIBLE);
+            holder.tvRepeat.setText("going");
+        }else if (trip.getStatus().equals(Data.UPCOMINGR2)) {
+            holder.tvStatus.setText(R.string.done);
+            holder.tvRepeat.setVisibility(View.VISIBLE);
+            holder.tvRepeat.setText(" coming back"); }
 
-        if (trip.getStatus().equals(1)){
 
-
-       }
 
         tripDate.add(position,trip.getDate());
         tripHour.add(position,trip.getAlarm());
         tripStatus.add(position,trip.getStatus());
 
-
-       // Toast.makeText(holder.tvTime.getContext(),""+tripDate.size(), Toast.LENGTH_SHORT).show();
+ 
 
 
 
@@ -207,6 +218,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             TextView tvDate = view.findViewById(R.id.tvDate);
             TextView tvTime = view.findViewById(R.id.tvTime);
 
+            TextView tvRepeat = view.findViewById(R.id.tvRepeat);
+
             AutoCompleteTextView repeat = view.findViewById(R.id.repeat);
             AutoCompleteTextView way = view.findViewById(R.id.way);
             Button btUpdate = view.findViewById(R.id.btAdd);
@@ -282,7 +295,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                     map.put("tripName", edTripName.getText().toString());
                     map.put("repeat", repeat.getText().toString());
                     map.put("way", way.getText().toString());
-                    map.put("status", Data.UPCOMING);
+
+                    map.put("status",trip.getWay());
 
                     FirebaseDatabase.getInstance().getReference("trips"+user.getUid()).child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -362,6 +376,58 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
         });
         holder.btStart.setOnClickListener(v -> {
+
+
+            DialogPlus dialog = DialogPlus.newDialog(holder.ivDelete.getContext())
+                    .setContentHolder(new ViewHolder(R.layout.map_transportation))
+                    .setExpanded(true, 1200)
+                    .create();
+            dialog.show();
+            View view = dialog.getHolderView();
+            TextView tvBicycle = view.findViewById(R.id.tvBicycle);
+            TextView tvBus = view.findViewById(R.id.tvBus);
+            TextView tvWalk = view.findViewById(R.id.tvWalk);
+            TextView tvTwoWheeler = view.findViewById(R.id.tvTwoWheeler);
+
+
+            String lat=trip.getLatLogEnd();
+            tvBicycle.setOnClickListener(m->{
+                Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=b"));
+                intent.setPackage("com.google.android.apps.maps");
+
+                if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
+                    tvBicycle.getContext().startActivity(intent);
+                    dialog.dismiss();
+            }});
+            tvBus.setOnClickListener(m->{
+                Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=d"));
+                intent.setPackage("com.google.android.apps.maps");
+
+                if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
+                    tvBicycle.getContext().startActivity(intent);
+                    dialog.dismiss();
+
+                }});
+            tvWalk.setOnClickListener(m->{
+                Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=w"));
+                intent.setPackage("com.google.android.apps.maps");
+
+                if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
+                    tvBicycle.getContext().startActivity(intent);
+                    dialog.dismiss();
+
+                }});
+            tvTwoWheeler.setOnClickListener(m->{
+                Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=l"));
+                intent.setPackage("com.google.android.apps.maps");
+
+                if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
+                    tvBicycle.getContext().startActivity(intent);
+                    dialog.dismiss();
+
+
+                }});
+
             Map<String, Object> map = new HashMap<>();
             map.put("alarm", trip.getAlarm());
             map.put("date", trip.getDate());
@@ -371,28 +437,44 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             map.put("repeat", trip.getRepeat());
             map.put("way", trip.getWay());
             map.put("status", Data.DONE);
+            map.put("endLat", trip.getEndLat());
+            map.put("latLogEnd", trip.getLatLogEnd());
+            map.put("endLong", trip.getEndLong());
+            map.put("startLat", trip.getStartLat());
+            map.put("startLong", trip.getStartLong());
             if (screen == 1) {
                 FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
             } else if (screen == 2) {
                 FirebaseDatabase.getInstance().getReference().child("tripCancel"+user.getUid()).child(getRef(position).getKey()).removeValue();
 
-
             }
             FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map)
                     .addOnSuccessListener(unused ->
-                            Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
+                            Toast.makeText(holder.txvEndPoint.getContext(), "Trip Done is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
-                        Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(holder.txvEndPoint.getContext(), "Done while Cancel", Toast.LENGTH_SHORT).show();
 
                     });
+            //try {
 
+
+           // Uri uri=Uri.parse("https://www.ggogle.co.in/map/dir/Mumbai/Thane");
+            /*
+}*/
+//holder.tvSetWay.getContext().startActivity(intent1);//}
+           /* catch (ActivityNotFoundException e){
+                Uri uri=Uri.parse("https://play.google.com/stor/apps/details?id=com.googel.android.apps.maps");
+                Intent intent=new Intent(Intent.ACTION_VIEW,uri);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                holder.tvSetWay.getContext().startActivity(intent);}
+*/
         });
 
     }
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView txvStartPoint, txvEndPoint, txvTripNam, tvDate, tvTime, tvStatus, btStart, btCancel,tvSetWay,tvSeRepeat;
+        TextView txvStartPoint, txvEndPoint, tvRepeat,txvTripNam, tvDate, tvTime, tvStatus, btStart, btCancel,tvSetWay,tvSeRepeat;
         ImageView ivNotes, ivDelete, ivEdit;
         SwipeRevealLayout swipeRefreshLayout;
         ChipGroup chipGroup;
@@ -415,6 +497,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             chipGroup = itemView.findViewById(R.id.chipGroupp);
             tvSetWay=itemView.findViewById(R.id.tvSetWay);
             tvSeRepeat=itemView.findViewById(R.id.tvSetRepeat);
+            tvRepeat=itemView.findViewById(R.id.tvRepeat);
 
 
             swipeRefreshLayout = itemView.findViewById(R.id.main_container);
