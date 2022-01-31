@@ -62,10 +62,12 @@
         <entry key="..\:/iti program/courses/Android/Android project/version2/Trip-Project/app/src/main/res/layout/sample_view.xml" value="0.2" />
         <entry key="..\:/iti program/courses/Android/Android project/version2/Trip-Project/app/src/main/res/layout/test_main.xml" value="0.13020833333333334" />
         <entry key="..\:/iti program/courses/Android/Android project/version2/Trip-Project/app/src/main/res/layout/tv_entity.xml" value="0.13020833333333334" />
+        <entry key="..\:/iti program/courses/Android/Android project/version3/Trip-Project/app/src/debug/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.14635416666666667" />
+        <entry key="..\:/iti program/courses/Android/Android project/version3/Trip-Project/app/src/main/res/layout/nav_header_main.xml" value="0.13020833333333334" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

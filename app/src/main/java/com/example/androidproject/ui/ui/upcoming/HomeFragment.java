@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.androidproject.MainActivity;
 import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
 import com.example.androidproject.databinding.FragmentHomeBinding;
@@ -25,7 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.siddharthks.bubbles.FloatingBubblePermissions;
+
+import java.util.Calendar;
 
 
 public class HomeFragment extends Fragment {
@@ -34,12 +36,11 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     RecyclerView recyclerView;
     AddAdapter addAdapter;
-      FloatingActionButton btAdd;
+    FloatingActionButton btAdd;
     Calendar calendar;
-FirebaseUser user;
+    FirebaseUser user;
     public  FirebaseAuth FIREBASEAUTH;
     DatabaseReference scoresRef;
-    FloatingActionButton btAdd;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,27 +58,24 @@ FirebaseUser user;
 
         recyclerView = binding.recUpcoming;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-          FirebaseRecyclerOptions<Trip> options=new FirebaseRecyclerOptions.Builder<Trip>()
-                .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid()),Trip.class).build();
-          //options.getSnapshots().get(0);
 
-         addAdapter = new AddAdapter(options);
-        recyclerView.setAdapter(addAdapter);
+        //options.getSnapshots().get(0);
+
 
 
         if(!MainActivity.storedPreference.equals("null")) {
-            FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+            FirebaseRecyclerOptions<Trip> options1 = new FirebaseRecyclerOptions.Builder<Trip>()
                     .setQuery(scoresRef, Trip.class).build();
             //options.getSnapshots().get(0);
-            addAdapter = new AddAdapter(options);
+            addAdapter = new AddAdapter(options1);
             recyclerView.setAdapter(addAdapter);
         }
 
         else if(! MainActivity.storedUid.equals("no id exist")){
-            FirebaseRecyclerOptions<Trip> options = new FirebaseRecyclerOptions.Builder<Trip>()
+            FirebaseRecyclerOptions<Trip> options2 = new FirebaseRecyclerOptions.Builder<Trip>()
                     .setQuery(scoresRef2, Trip.class).build();
             //options.getSnapshots().get(0);
-            addAdapter = new AddAdapter(options);
+            addAdapter = new AddAdapter(options2);
             recyclerView.setAdapter(addAdapter);
         }
         btAdd=binding.floatingActionButton;
@@ -86,7 +84,7 @@ FirebaseUser user;
 
         });
 
-    View root = binding.getRoot();
+        View root = binding.getRoot();
         return root;
 
     }

@@ -17,7 +17,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
          android:paddingTop="20dp"
-        app:srcCompat="@mipmap/ic_trip" />
+
+        android:src="@drawable/logo3"
+        />
 
     <TextView
         android:id="@+id/tvNameUser"

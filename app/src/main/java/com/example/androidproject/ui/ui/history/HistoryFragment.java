@@ -79,33 +79,72 @@ AddAdapter.screen=3;
         AddAdapter.screen=3;
         user= firebaseAuth.getCurrentUser();
 
+        if(!MainActivity.storedPreference.equals("null")){
 
         arrayTrips=new ArrayList<>();//map edit
-          databaseReference = FirebaseDatabase.getInstance().getReference().child("history"+ Data.USER.getUid()) ;
+          databaseReference =scoresRef.child("history"+ MainActivity.storedPreference) ;
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        Trip trip=dataSnapshot.getValue(Trip.class);
+                        arrayTrips.add(trip);
+                    }
+                    for (Trip trip :arrayTrips){
 
-          databaseReference.addValueEventListener(new ValueEventListener() {
-              @Override
-              public void onDataChange(@NonNull DataSnapshot snapshot) {
-                  for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                      Trip trip=dataSnapshot.getValue(Trip.class);
-                      arrayTrips.add(trip);
-                   }
-                   for (Trip trip :arrayTrips){
+                        latLngs.add(new LatLng(trip.getEndLat(),trip.getEndLong()));
+                        latLngs.add(new LatLng(trip.getStartLat(),trip.getStartLong()));
 
-                      latLngs.add(new LatLng(trip.getEndLat(),trip.getEndLong()));
-                      latLngs.add(new LatLng(trip.getStartLat(),trip.getStartLong()));
-
-                  }
-
+                    }
 
 
-              }
 
-              @Override
-              public void onCancelled(@NonNull DatabaseError error) {
+                }
 
-              }
-          });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+
+
+
+        }
+
+        else if(! MainActivity.storedUid.equals("no id exist")){
+
+            arrayTrips=new ArrayList<>();//map edit
+            databaseReference =scoresRef2.child("history"+  MainActivity.storedUid) ;
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        Trip trip=dataSnapshot.getValue(Trip.class);
+                        arrayTrips.add(trip);
+                    }
+                    for (Trip trip :arrayTrips){
+
+                        latLngs.add(new LatLng(trip.getEndLat(),trip.getEndLong()));
+                        latLngs.add(new LatLng(trip.getStartLat(),trip.getStartLong()));
+
+                    }
+
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+
+        }
+
 
         recyclerView = view.findViewById(R.id.recHistory);
       Toast.makeText(getContext(), latLngs.size()+"", Toast.LENGTH_SHORT).show();

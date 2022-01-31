@@ -249,6 +249,7 @@ else if(! MainActivity.storedUid.equals("no id exist")){
 //                map.put("UID", trip.getUID());
 //            if (trip.getToken() != null)
 //                map.put("UID", trip.getToken());
+            if(!MainActivity.storedPreference.equals("null")){
 
             map.put("alarm", trip.getAlarm());
             map.put("date", trip.getDate());
@@ -266,8 +267,7 @@ else if(! MainActivity.storedUid.equals("no id exist")){
                 FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
                 FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map);
               
-if(!MainActivity.storedPreference.equals("null")){
-            builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
+            builder.setPositiveButton(R.string.cancel, (dialog2, which2) -> {
                 scoresReft1.child(getRef(position).getKey()).removeValue();
                 scoresRefh1.push().setValue(map);
 
@@ -279,37 +279,54 @@ if(!MainActivity.storedPreference.equals("null")){
                         });
                 DataForAlarm.deleteAlarmForOneTrip(map);
             });
-            builder.setNegativeButton("Cancel", (dialog, which) -> {
+            builder.setNegativeButton("Cancel", (dialog2, which2) -> {
                 Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
             });
             builder.show();
 
-        });
-
-
-
         }
+            );}
+
+
+
 
         else if(! MainActivity.storedUid.equals("no id exist")){
 
-    builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
-        scoresReft2.child(getRef(position).getKey()).removeValue();
-        scoresRefh2.push().setValue(map);
+                map.put("alarm", trip.getAlarm());
+                map.put("date", trip.getDate());
+                map.put("endPoint", trip.getEndPoint());
+                map.put("startPoint", trip.getStartPoint());
+                map.put("tripName", trip.getTripName());
+                map.put("repeat", trip.getRepeat());
+                map.put("way", trip.getWay());
+                map.put("status", Data.CANCEL);
 
-        scoresRefc2.push().setValue(map)
-                .addOnSuccessListener(unused ->
-                        Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> {
-                    Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
+                builder.setTitle("Are You Sure?");
+                builder.setMessage("Cancel this Trip.");
+                builder.setPositiveButton("Yes", (dialog, which) -> {
+                            FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
+                            FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map);
 
-                });
+                            builder.setPositiveButton(R.string.cancel, (dialog2, which2) -> {
+                                scoresReft2.child(getRef(position).getKey()).removeValue();
+                                scoresRefh2.push().setValue(map);
 
+                                scoresRefc2.push().setValue(map)
+                                        .addOnSuccessListener(unused ->
+                                                Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+                                        });
+                                DataForAlarm.deleteAlarmForOneTrip(map);
+                            });
+                            builder.setNegativeButton("Cancel", (dialog2, which2) -> {
+                                Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
+                            });
+                            builder.show();
 
-    });
-    builder.setNegativeButton("Cancel", (dialog, which) -> {
-        Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
-    });
-    builder.show();
+                        }
+                );
 
 
 
@@ -690,7 +707,7 @@ map.put("endLat", trip.getEndLat());
                 intent.putExtra("note",trip.getNotes());
                 getApplicationContext().startService(intent);
 
-        }
+        }}
     else if (! MainActivity.storedUid.equals("no id exist")){
                 if (screen == 1) {
                     scoresReft2.child(getRef(position).getKey()).removeValue();
@@ -716,7 +733,7 @@ map.put("endLat", trip.getEndLat());
 
 
 
-    });
+
                         Toast.makeText(holder.txvEndPoint.getContext(), "Done while Cancel", Toast.LENGTH_SHORT).show();
 
                     });
@@ -733,15 +750,37 @@ map.put("endLat", trip.getEndLat());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 holder.tvSetWay.getContext().startActivity(intent);}
 */
-        });
+        }
 
+
+
+
+    public static void deleteAndFillAlarm() {
+
+        ArrayList<Trip> arrayTrips = new ArrayList<>();
+        DataForAlarm.DeleteAllAlarms();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid());
+
+        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                    Trip trip = dataSnapshot.getValue(Trip.class);
+                    arrayTrips.add(trip);
+                }
+                Log.i("Main", "onDeleteandFill: Array Size is " + arrayTrips.size());
+                //Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
+                DataForAlarm.setDataForAlarm(arrayTrips);
+            }
+        });
     }
+
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView txvStartPoint, txvEndPoint, tvRepeat,txvTripNam, tvDate, tvTime, tvStatus, btStart, btCancel,tvSetWay,tvSeRepeat;
-        ImageView ivNotes, ivDelete, ivEdit;
+        ImageView ivNotes, ivDelete, ivEdit,ivSetNotes;
         SwipeRevealLayout swipeRefreshLayout;
         ChipGroup chipGroup;
         LinearLayout linearLayout;
@@ -787,27 +826,9 @@ map.put("endLat", trip.getEndLat());
                 }
             }
         }
-    }
 
 
-    public static void deleteAndFillAlarm(){
 
-        ArrayList<Trip> arrayTrips = new ArrayList<>();
-        DataForAlarm.DeleteAllAlarms();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid());
-
-        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-                    Trip trip = dataSnapshot.getValue(Trip.class);
-                    arrayTrips.add(trip);
-                }
-                Log.i("Main", "onDeleteandFill: Array Size is "+ arrayTrips.size());
-                //Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
-                DataForAlarm.setDataForAlarm(arrayTrips);
-            }
-        });
 
 
         /*databaseReference.addValueEventListener(new ValueEventListener() {
@@ -833,5 +854,6 @@ map.put("endLat", trip.getEndLat());
 //                .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid()),Trip.class).build();
 
 
-    }
+
+}
 }

@@ -61,24 +61,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".reciever.DialogActivity2"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat.transparent" />
 
-        <receiver
-            android:name=".reciever.AlarmReceiver"
-            android:enabled="true"
-            android:exported="true" />
 
             android:name=".reciever.DialogActivity"
             android:theme="@style/Theme.AppCompat.transparent"
             android:exported="false" />
 
 
-        <activity
-            android:name=".Registeration.LoginFaceBook"
-            android:exported="false" />
+
         <activity
             android:name=".Registeration.RegisterActivity"
             android:exported="false" />
