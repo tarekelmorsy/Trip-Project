@@ -89,14 +89,6 @@ public class DialogActivity extends AppCompatActivity {
                 Toast.makeText(DialogActivity.this, "You pressed cancel.", Toast.LENGTH_SHORT).show();
                 dialogInterface.cancel();
                 mediaPlayer.stop();
-                /*FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
-                FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(myTrip);
-                FirebaseDatabase.getInstance().getReference().child("tripCancel"+user.getUid()).push().setValue(myTrip)
-                        .addOnSuccessListener(unused ->
-                                Toast.makeText(DialogActivity.this, "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(DialogActivity.this, "Error while Cancel", Toast.LENGTH_SHORT).show();
-                        });*/
                 finish();
 
             }
@@ -117,10 +109,9 @@ public class DialogActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id)
             {
                 Toast.makeText(DialogActivity.this, "you pressed start.", Toast.LENGTH_SHORT).show();
-                //Intent intent1 = new Intent(DialogActivity2.this,MainActivity.class);
-               // startActivity(intent1);
                 sendActionForStart(keyOfTrip);
                 mediaPlayer.stop();
+               // finish();
             }
         });
         alertdialog.create().getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);

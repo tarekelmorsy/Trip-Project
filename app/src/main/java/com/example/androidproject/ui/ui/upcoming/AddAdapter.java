@@ -45,8 +45,10 @@ import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.AddTripActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
@@ -173,7 +175,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
 
                                         }
-                                    }) ;}
+                                    }) ;
+                                }
 
                                 else if(! MainActivity.storedUid.equals("no id exist")){
 
@@ -189,10 +192,6 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                                         }
                                     }) ;
-
-
-
-
                                 }
 
 
@@ -215,17 +214,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             holder.tvStatus.setText(R.string.done);
             holder.btCancel.setVisibility(View.GONE);
 
-
         }
-
-        if (trip.getStatus().equals(1)){
-
-
-        }
-
-
-
-
 
         holder.btCancel.setOnClickListener(v -> {
 
@@ -262,6 +251,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                             });
 
+                    DataForAlarm.deleteAlarmForOneTrip(map);
 
                 });
                 builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -286,6 +276,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                             });
 
+                    DataForAlarm.deleteAlarmForOneTrip(map);
 
                 });
                 builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -450,6 +441,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                             }
                         });
+                        deleteAndFillAlarm();
+
                     }
 
                     else if(! MainActivity.storedUid.equals("no id exist")){
@@ -468,14 +461,9 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                             }
                         });
-
-
-
+                        deleteAndFillAlarm();
 
                     }
-
-
-
 
 
                 } else if (screen == 2) {///
@@ -506,6 +494,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                             }
                         });
+                        deleteAndFillAlarm();
+
                     }////
                     else if(! MainActivity.storedUid.equals("no id exist")){
                         scoresRefh2.push().setValue(map);
@@ -526,15 +516,9 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                             }
                         });
 
-
-
-
-
-
+                        deleteAndFillAlarm();
 
                     }
-
-
 
                 }
 
@@ -553,6 +537,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                     if(!MainActivity.storedPreference.equals("null")){
                         if (screen == 1) {
                             scoresReft1.child(getRef(position).getKey()).removeValue();
+                            deleteAndFillAlarm();
                         } else if (screen == 2) {
                             scoresRefc1.child(getRef(position).getKey()).removeValue();
 
@@ -562,12 +547,13 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
 
                         }
-
                     }
                     else if(! MainActivity.storedUid.equals("no id exist")){
 
                         if (screen == 1) {
                             scoresReft2.child(getRef(position).getKey()).removeValue();
+                            deleteAndFillAlarm();
+
                         } else if (screen == 2) {
                             scoresRefc2.child(getRef(position).getKey()).removeValue();
 
@@ -579,9 +565,6 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                         }
 
                     }
-
-
-
 
                 });
                 builder.setNegativeButton("Cancel", (dialog, which) -> {
@@ -662,6 +645,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             if(!MainActivity.storedPreference.equals("null")){
                 if (screen == 1) {
                     scoresReft1.child(getRef(position).getKey()).removeValue();
+                    DataForAlarm.deleteAlarmForOneTrip(map);
+
                 } else if (screen == 2) {
                     scoresRefc1.child(getRef(position).getKey()).removeValue();
 
@@ -684,6 +669,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
                 if (screen == 1) {
                     scoresReft2.child(getRef(position).getKey()).removeValue();
+                    DataForAlarm.deleteAlarmForOneTrip(map);
+
                 } else if (screen == 2) {
                     scoresRefc2.child(getRef(position).getKey()).removeValue();
                 }
@@ -755,5 +742,45 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                 }
             }
         }
+    }
+
+    public static void deleteAndFillAlarm(){
+
+        ArrayList<Trip> arrayTrips = new ArrayList<>();
+        DataForAlarm.DeleteAllAlarms();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid());
+
+        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
+                    Trip trip = dataSnapshot.getValue(Trip.class);
+                    arrayTrips.add(trip);
+                }
+                Log.i("Main", "onDeleteAndFill: Array Size is "+ arrayTrips.size());
+                //Log.i("Main", "onDeleteAndFill: Array is "+ arrayTrips);
+                DataForAlarm.setDataForAlarm(arrayTrips);
+            }
+        });
+
+        /*databaseReference.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    Trip trip = dataSnapshot.getValue(Trip.class);
+                    arrayTrips.add(trip);
+                }
+                Log.i("Main", "onDeleteandFill: Array Size is "+ arrayTrips.size());
+                Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
+                DataForAlarm.setDataForAlarm(arrayTrips);
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });*/
+
     }
 }

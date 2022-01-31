@@ -262,7 +262,9 @@ final String TAG="AddTripActivity";
             FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
 
                 });*/
-            }
+            DataForAlarm.addAlarmForTrip(map);
+
+        }
         else if(!MainActivity.storedUid.equals("no id exist")){
              Map<String, Object> map = new HashMap<>();
         map.put("endPoint", edEndPoint.getText().toString());
@@ -283,9 +285,10 @@ final String TAG="AddTripActivity";
                     .addOnFailureListener(e -> {
                         Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
                     });
-            //DataForAlarm.addAlarmForTrip(map);
 
-                    }
+            DataForAlarm.addAlarmForTrip(map);
+
+        }
         }
 
     

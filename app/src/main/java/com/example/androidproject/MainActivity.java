@@ -26,7 +26,9 @@ import android.widget.Toast;
 import com.example.androidproject.Registeration.LoginActivity;
 import com.example.androidproject.Registeration.SplashScreen;
 import com.example.androidproject.data.Data;
+import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.ui.cancel.CancelFragment;
+import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.example.androidproject.ui.ui.upcoming.HomeFragment;
 import com.example.androidproject.ui.ui.history.HistoryFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -95,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         if (storedUid.equals("no id exist") && storedPreference.equals("null")) {
 
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
-
             finish();
             return;
 
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_home: {
                         Data.FIREBASEAUTH.signOut();
+                        DataForAlarm.deleteAllAlarmsLogOut();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
                         break;
