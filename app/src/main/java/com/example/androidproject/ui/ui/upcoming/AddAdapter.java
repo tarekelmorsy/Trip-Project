@@ -196,11 +196,6 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                                 }
 
 
-
-
-                                //else
-
-
                             };}).create().show();
 
             }});
