@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private FirebaseAuth.AuthStateListener authStateListener;
     private AccessTokenTracker tracker;
-    FirebaseUser firebaseUser;
+   static FirebaseUser firebaseUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +55,6 @@ public class LoginActivity extends AppCompatActivity {
         init();
         //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-//
-//        FloatingBubblePermissions.startPermissionRequest(this);
-//        startService(new Intent(getApplicationContext(), SimpleService.class));
-        Data.FIREBASEAUTH = FirebaseAuth.getInstance();
          firebaseUser =  Data.FIREBASEAUTH.getCurrentUser();
 
      //Data.FIREBASEAUTH.Persistence.LOCAL;
@@ -93,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                 firebaseUser = firebaseAuth.getCurrentUser();//&&&&&&&
+//                 firebaseUser = firebaseAuth.getCurrentUser();//&&&&&&&
 
                 if (firebaseUser != null) {
 

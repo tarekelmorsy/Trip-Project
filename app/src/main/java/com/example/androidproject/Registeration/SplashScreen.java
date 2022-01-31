@@ -18,7 +18,6 @@ public class SplashScreen extends AppCompatActivity {
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-
         Thread background = new Thread() {
             public void run() {
                 try {

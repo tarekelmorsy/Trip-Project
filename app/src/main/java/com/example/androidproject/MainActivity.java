@@ -29,6 +29,8 @@ import com.example.androidproject.data.Data;
 import com.example.androidproject.ui.ui.cancel.CancelFragment;
 import com.example.androidproject.ui.ui.upcoming.HomeFragment;
 import com.example.androidproject.ui.ui.history.HistoryFragment;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -65,13 +67,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);//************8
 
-        Data.USER = Data.FIREBASEAUTH.getCurrentUser();
-        setUpToolbar();
+          FirebaseAuth FIREBASEAUTH=FirebaseAuth.getInstance();
+
+          FirebaseUser USER=FIREBASEAUTH.getCurrentUser();
+          setUpToolbar();
         DatabaseReference scoresReft1 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference);
         scoresReft1.keepSynced(true);
 
         DatabaseReference scoresReft2 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedUid);
         scoresReft2.keepSynced(true);
+
         SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
 
         storedPreference = preferences.getString("x", "null");
@@ -82,27 +87,25 @@ public class MainActivity extends AppCompatActivity {
 
 
         textView = findViewById(R.id.tvNameUser);
-        Data.USER = Data.FIREBASEAUTH.getCurrentUser();
 
-
-        Data.USER = Data.FIREBASEAUTH.getCurrentUser();
-        SharedPreferences preferencess = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
-        String storedPreference = preferencess.getString("x", "null");
         Log.i(TAG, "onCreate: token= " + storedPreference);
         Log.i(TAG, "onCreate: uidxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx= " + storedUid);
 
+///
 
-        if (storedUid.equals("no id exist") && storedPreference.equals("null")) {
 
+
+        ///
+
+
+       if( Data.FIREBASEAUTH.getCurrentUser()==null )
+        {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
             finish();
             return;
-
         }
 
-
-//            Toast.makeText(MainActivity.this, Data.USER.getEmail().toString(), Toast.LENGTH_SHORT).show();
 
 
         mAppBarConfiguration = new AppBarConfiguration.Builder()
@@ -116,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_home: {
                         Data.FIREBASEAUTH.signOut();
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-
+                       startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                        finish();
                         break;
                     }
                     case R.id.nav_ar: {

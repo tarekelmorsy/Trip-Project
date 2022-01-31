@@ -95,13 +95,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        addAdapter.startListening();
+       addAdapter.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        addAdapter.stopListening();
+       addAdapter.stopListening();
     }
 
 
