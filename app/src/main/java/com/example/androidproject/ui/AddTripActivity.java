@@ -229,30 +229,36 @@ public class AddTripActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference().child("trips"+Data.USER.getUid()).push().setValue(map)
 
                 });*/
-        } else if (!MainActivity.storedUid.equals("no id exist")) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("endPoint", edEndPoint.getText().toString());
-            map.put("startPoint", edStartPoint.getText().toString());
-            map.put("tripName", edTripName.getText().toString());
-            map.put("repeat", repeat.getText().toString());
-            map.put("way", way.getText().toString());
-            map.put("status", Data.UPCOMING);
-            map.put("latLogEnd", endMapLatLong);
-            map.put("endLat", endLat);
-            map.put("endLong", endLong);
-            map.put("startLat", startLat);
-            map.put("startLong", startLong);
-            map.put("alarm", tvTime.getText().toString());
-            map.put("date", tvDate.getText().toString());
+            DataForAlarm.addAlarmForTrip(map);
+
+        }
+        else if(!MainActivity.storedUid.equals("no id exist")){
+             Map<String, Object> map = new HashMap<>();
+        map.put("endPoint", edEndPoint.getText().toString());
+        map.put("startPoint", edStartPoint.getText().toString());
+        map.put("tripName", edTripName.getText().toString());
+        map.put("repeat", repeat.getText().toString());
+        map.put("way", way.getText().toString());
+        map.put("status", Data.UPCOMING);
+        map.put("latLogEnd", endMapLatLong);
+        map.put("endLat", endLat);
+        map.put("endLong", endLong);
+        map.put("startLat", startLat);
+        map.put("startLong", startLong);
+        map.put("alarm", tvTime.getText().toString());
+        map.put("date", tvDate.getText().toString());
+
             scoresRef2.push().setValue(map)
                     .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
                         Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
                     });
-            //DataForAlarm.addAlarmForTrip(map);
+
+            DataForAlarm.addAlarmForTrip(map);
 
         }
-    }
+
+        }
 
 
     private void handleError() {

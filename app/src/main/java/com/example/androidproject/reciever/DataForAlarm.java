@@ -75,7 +75,7 @@ public class DataForAlarm {
 
     public static void addAlarmForTrip(Map map) {
 
-        String tripAlarm , tripDate,tripName,tripEndPoint,tripStartPoint,tripRepeat,tripStatus,tripWay;
+        String tripAlarm , tripDate,tripName,tripEndPoint,tripStartPoint,tripRepeat,tripStatus,tripWay, tripNotes;
 
         tripAlarm = map.get("alarm").toString();
         tripDate = map.get("date").toString();
@@ -85,6 +85,7 @@ public class DataForAlarm {
         tripStatus = map.get("status").toString();
         tripWay = map.get("way").toString();
         tripName = map.get("tripName").toString();
+        //tripNotes = map.get("notes").toString();
 
         tripTime = tripAlarm.split(":");
             hourOfTime = tripTime[0];
@@ -141,11 +142,12 @@ public class DataForAlarm {
     }
 
     public static void deleteAllAlarmsLogOut() {
+        workManager = WorkManager.getInstance();
         workManager.cancelAllWork();
     }
 
     public static void deleteAlarmForOneTrip ( Map map ){
-        String tripAlarm , tripDate,tripName,tripEndPoint,tripStartPoint,tripRepeat,tripStatus,tripWay;
+        String tripAlarm , tripDate,tripName,tripEndPoint,tripStartPoint,tripRepeat,tripStatus,tripWay,tripNotes;
 
         tripAlarm = map.get("alarm").toString();
         tripDate = map.get("date").toString();
@@ -155,6 +157,8 @@ public class DataForAlarm {
         tripStatus = map.get("status").toString();
         tripWay = map.get("way").toString();
         tripName = map.get("tripName").toString();
+        //tripNotes = map.get("notes").toString();
+
 
         String keyOfTrip = tripAlarm + "&" + tripDate + "&" + tripEndPoint +
                 "&" + tripRepeat + "&" + tripStartPoint + "&" + tripStatus + "&" + tripName + "&" + tripWay;
