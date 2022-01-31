@@ -244,6 +244,11 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             map.put("repeat", trip.getRepeat());
             map.put("way", trip.getWay());
             map.put("status", Data.CANCEL);
+            map.put("endLat", trip.getEndLat());
+            map.put("latLogEnd", trip.getLatLogEnd());
+            map.put("endLong", trip.getEndLong());
+            map.put("startLat", trip.getStartLat());
+            map.put("startLong", trip.getStartLong());
 
             AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
             builder.setTitle("Are You Sure?");
@@ -327,8 +332,40 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
 
         holder.ivEdit.setOnClickListener(v -> {
+//
+//
+//            Intent intent = new Intent(holder.btCancel.getContext(),AddTripActivity.class);
+////            intent.putExtra("alarm",trip.getAlarm());
+////            intent.putExtra("date",trip.getDate());
+////            intent.putExtra("endPoint",trip.getEndPoint());
+////            intent.putExtra("startPoint", trip.getStartPoint());
+////            intent.putExtra("tripName", trip.getTripName());
+////            intent.putExtra("repeat",trip.getRepeat());
+////            intent.putExtra("way",trip.getWay());
+////            intent.putExtra("endLat",trip.getEndLat());
+////            intent.putExtra("latLogEnd",trip.getLatLogEnd());
+////            intent.putExtra("endLong", trip.getEndLong());
+////            intent.putExtra("startLat",trip.getStartLat());
+////            intent.putExtra("startLong", trip.getStartLong());
+//            intent.putExtra("update", "1");
+//            holder.tvSetWay.getContext().startActivity(intent);
+//
+//            Data.alarm=trip.getAlarm();
+//            Data.date=trip.getDate();
+//            Data.endPoint=trip.getEndPoint();
+//            Data.startPoint= trip.getStartPoint();
+//            Data.tripName= trip.getTripName();
+//            Data.repeat=trip.getRepeat();
+//            Data.way=trip.getWay();
+//            Data.endLat=trip.getEndLat();
+//            Data.latLogEnd=trip.getLatLogEnd();
+//            Data.endLong=trip.getEndLong();
+//            Data.startLat=trip.getStartLat();
+//            Data.startLong= trip.getStartLong();
 
-            DialogPlus dialog = DialogPlus.newDialog(holder.ivDelete.getContext())
+            ////////////////////////////////////////////////////////////////////////////////
+
+             DialogPlus dialog = DialogPlus.newDialog(holder.ivDelete.getContext())
                     .setContentHolder(new ViewHolder(R.layout.activity_add_trip))
                     .setExpanded(true, 1800)
                     .create();
@@ -354,6 +391,7 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             AutoCompleteTextView repeat = view.findViewById(R.id.repeat);
             AutoCompleteTextView way = view.findViewById(R.id.way);
             Button btUpdate = view.findViewById(R.id.btAdd);
+
             edStartPoint.setText(trip.getStartPoint());
             edEndPoint.setText(trip.getEndPoint());
             edTripName.setText(trip.getTripName());
@@ -364,8 +402,8 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
             ArrayAdapter<String> arrayAdapterRepeat;
             ArrayAdapter<String> arrayAdapterWay;
             // add list in repeat and way
-              ArrayList<String> repeatList = new ArrayList<>();
-              ArrayList<String> wayList = new ArrayList<>();
+            ArrayList<String> repeatList = new ArrayList<>();
+            ArrayList<String> wayList = new ArrayList<>();
             wayList.add(imvDate.getContext().getString(R.string.oneWay));
             wayList.add(imvDate.getContext().getString(R.string.towWay));
             repeatList.add(imvDate.getContext().getString(R.string.noRepeat));
