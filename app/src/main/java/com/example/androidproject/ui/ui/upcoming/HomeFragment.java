@@ -77,7 +77,10 @@ public class HomeFragment extends Fragment {
         }
         btAdd=binding.floatingActionButton;
         btAdd.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), AddTripActivity.class));
+            Intent intent=new Intent(getContext(),AddTripActivity.class);
+            intent.putExtra("update","2");
+            startActivity(intent);
+            //startActivity(new Intent(getContext(), AddTripActivity.class));
 
         });
 

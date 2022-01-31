@@ -1,5 +1,6 @@
 package com.example.androidproject.ui;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -27,17 +28,24 @@ import android.widget.Toast;
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
 import com.example.androidproject.data.Data;
+import com.example.androidproject.data.Trip;
 import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -49,7 +57,7 @@ public class AddTripActivity extends AppCompatActivity {
 
     private EditText edStartPoint, edEndPoint, edTripName;
     private ImageView imvTime, imvDate, imvTimeBack, imvDateBack;
-    private TextView tvDate,tvTime, tvTimeBack, tvDateBack ,tvGoing;
+    private TextView tvDate, tvTime, tvTimeBack, tvDateBack, tvGoing,tvTitle;
     private int t1Hour, t1Minut;
     private Button btAdd;
     private AutoCompleteTextView repeat, way;
@@ -66,88 +74,57 @@ public class AddTripActivity extends AppCompatActivity {
     final int day = calendar.get(Calendar.DAY_OF_MONTH);
     private ConstraintLayout containerBack;
     List<Place.Field> placeFields;
-    int STARTKEY =100;
-    int ENDKEY =101;
+    int STARTKEY = 100;
+    int ENDKEY = 101;
 
     private double endLat;
     private double startLat;
     private double endLong;
     private double startLong;
-    private   String endMapLatLong;
+    private String endMapLatLong;
 
+    ArrayList<Trip> arrayTrips;
 
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
 
-final String TAG="AddTripActivity";
+    final String TAG = "AddTripActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_trip);
         initialize();
-        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
-       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        Data.USER = Data.FIREBASEAUTH.getCurrentUser();
+        // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-        Log.i(TAG, "onCreate: uidddddddddddddddddddddddddddddddddd"+ MainActivity.storedUid);
-        AddAdapter.screen=1;
-         scoresRef2 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedUid);
+        Log.i(TAG, "onCreate: uidddddddddddddddddddddddddddddddddd" + MainActivity.storedUid);
+        AddAdapter.screen = 1;
+        scoresRef2 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedUid);
         scoresRef2.keepSynced(true);
 
 
-       scoresRef1 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference);
+        scoresRef1 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference);
         scoresRef1.keepSynced(true);
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), Data.KEYMAP);
         }
 
-
-/*
-
-        // Initialize the AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
-
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(@NonNull Place place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
-            }
-
-
-            @Override
-            public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
-
-*/
-
-
-
-
-
-
         edStartPoint.setFocusable(false);
         edEndPoint.setFocusable(false);
 
         edStartPoint.setOnClickListener(v -> {
-            placeFields = Arrays.asList(Place.Field.ADDRESS,Place.Field.LAT_LNG, Place.Field.NAME);
+            placeFields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
 
-            Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,placeFields)
+            Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, placeFields)
                     .build(AddTripActivity.this);
             startActivityForResult(intent, STARTKEY);
 
 
         });
         edEndPoint.setOnClickListener(v -> {
-            placeFields = Arrays.asList(Place.Field.ADDRESS,Place.Field.LAT_LNG, Place.Field.NAME);
+            placeFields = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
 
-             Intent intent=new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,placeFields)
+            Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, placeFields)
                     .build(AddTripActivity.this);
             startActivityForResult(intent, ENDKEY);
 
@@ -168,10 +145,10 @@ final String TAG="AddTripActivity";
         arrayAdapterWay = new ArrayAdapter(getApplicationContext(), R.layout.tv_entity, wayList);
         way.setAdapter(arrayAdapterWay);
 
-        if(way.getText().toString().equals(getString(R.string.towWay))){
+        if (way.getText().toString().equals(getString(R.string.towWay))) {
             tvGoing.setVisibility(View.VISIBLE);
-            containerBack.setVisibility(View.VISIBLE);}
-        else {
+            containerBack.setVisibility(View.VISIBLE);
+        } else {
             tvGoing.setVisibility(View.GONE);
             containerBack.setVisibility(View.GONE);
 
@@ -179,14 +156,14 @@ final String TAG="AddTripActivity";
 
         //show timeDialog
         imvTime.setOnClickListener(v -> setTime(tvTime));
-        imvDate.setOnClickListener(v ->  setDate(tvDate));
+        imvDate.setOnClickListener(v -> setDate(tvDate));
         imvTimeBack.setOnClickListener(v -> setTime(tvTimeBack));
-        imvDateBack.setOnClickListener(v ->  setDate(tvDateBack));
-        way.setOnClickListener(v->{
-            if(way.getText().toString().equals(getString(R.string.towWay))){
+        imvDateBack.setOnClickListener(v -> setDate(tvDateBack));
+        way.setOnClickListener(v -> {
+            if (way.getText().toString().equals(getString(R.string.towWay))) {
                 tvGoing.setVisibility(View.VISIBLE);
-                containerBack.setVisibility(View.VISIBLE);}
-            else {
+                containerBack.setVisibility(View.VISIBLE);
+            } else {
                 tvGoing.setVisibility(View.GONE);
                 containerBack.setVisibility(View.GONE);
 
@@ -205,43 +182,33 @@ final String TAG="AddTripActivity";
     private void insertData() {
 
 
-        Data.USER= Data.FIREBASEAUTH.getCurrentUser();
+        Data.USER = Data.FIREBASEAUTH.getCurrentUser();
         SharedPreferences preferences = getSharedPreferences("mytokennn", Context.MODE_PRIVATE);
 
         String storedPreference = preferences.getString("x", "null");
-        Log.i(TAG, "onCreate: token= "+storedPreference);
-
-//        DatabaseReference scoresRef = FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid());
-//        scoresRef.keepSynced(true);
-//
-//
-//        DatabaseReference scoresRef2 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedPreference);
-//        scoresRef2.keepSynced(true);
+        Log.i(TAG, "onCreate: token= " + storedPreference);
 
 
-        //
-      
-      
-      
-        if(!MainActivity.storedPreference.equals("null")){
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("endPoint", edEndPoint.getText().toString());
-        map.put("startPoint", edStartPoint.getText().toString());
-        map.put("tripName", edTripName.getText().toString());
-        map.put("repeat", repeat.getText().toString());
-        map.put("way", way.getText().toString());
-        map.put("status", Data.UPCOMING);
-        map.put("latLogEnd", endMapLatLong);
-        map.put("endLat", endLat);
-        map.put("endLong", endLong);
-        map.put("startLat", startLat);
-        map.put("startLong", startLong);
-        map.put("alarm", tvTime.getText().toString());
-        map.put("date", tvDate.getText().toString());
+        if (!MainActivity.storedPreference.equals("null")) {
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("endPoint", edEndPoint.getText().toString());
+            map.put("startPoint", edStartPoint.getText().toString());
+            map.put("tripName", edTripName.getText().toString());
+            map.put("repeat", repeat.getText().toString());
+            map.put("way", way.getText().toString());
+            map.put("status", Data.UPCOMING);
+            map.put("latLogEnd", endMapLatLong);
+            map.put("endLat", endLat);
+            map.put("endLong", endLong);
+            map.put("startLat", startLat);
+            map.put("startLong", startLong);
+            map.put("alarm", tvTime.getText().toString());
+            map.put("date", tvDate.getText().toString());
 
 
-       scoresRef1.push().setValue(map)
+            scoresRef1.push().setValue(map)
 
                     .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
@@ -280,6 +247,7 @@ final String TAG="AddTripActivity";
         map.put("startLong", startLong);
         map.put("alarm", tvTime.getText().toString());
         map.put("date", tvDate.getText().toString());
+
             scoresRef2.push().setValue(map)
                     .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
@@ -289,29 +257,30 @@ final String TAG="AddTripActivity";
             DataForAlarm.addAlarmForTrip(map);
 
         }
+
         }
 
-    
 
-    private void handleError(){
-        if(edEndPoint.getText().toString()==""){
+    private void handleError() {
+        if (edEndPoint.getText().toString() == "") {
             edEndPoint.setError("please enter End Point");
 
-        }else if(edTripName.getText().toString()==""){
+        } else if (edTripName.getText().toString() == "") {
             edTripName.setError("please enter Trip Name");
 
-        }else if(edStartPoint.getText().toString()==""){
+        } else if (edStartPoint.getText().toString() == "") {
             edEndPoint.setError("please enter Start Point");
 
-        }else if(tvDate.getText().toString()==""){
+        } else if (tvDate.getText().toString() == "") {
             tvDate.setError("please enter Date");
 
-        }else if(tvTime.getText().toString()==""){
+        } else if (tvTime.getText().toString() == "") {
             tvTime.setError("please enter Date");
 
         }
 
     }
+
     private void clearAll() {
 
         edEndPoint.setText("");
@@ -331,6 +300,7 @@ final String TAG="AddTripActivity";
         edTripName = findViewById(R.id.edTripName);
         edStartPoint = findViewById(R.id.edStartPoint);
         imvDate = findViewById(R.id.imvDate);
+        tvTitle=findViewById(R.id.tevTitle);
         imvTime = findViewById(R.id.imvTime);
         tvDate = findViewById(R.id.tvDate);
         tvTime = findViewById(R.id.tvTime);
@@ -343,11 +313,11 @@ final String TAG="AddTripActivity";
         imvTimeBack = findViewById(R.id.imvTimeBack);
         tvDateBack = findViewById(R.id.tvDateBack);
         tvTimeBack = findViewById(R.id.tvTimeBack);
-        tvGoing=findViewById(R.id.tvGoing);
-        containerBack=findViewById(R.id.containerBack);
+        tvGoing = findViewById(R.id.tvGoing);
+        containerBack = findViewById(R.id.containerBack);
     }
 
-    public void setDate(TextView tvDate){
+    public void setDate(TextView tvDate) {
 
 
         listenerDate = (view, year, month, dayOfMonth) -> {
@@ -362,7 +332,8 @@ final String TAG="AddTripActivity";
         datePickerDialog.show();
 
     }
-    public void setTime(TextView tvTime ){
+
+    public void setTime(TextView tvTime) {
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(AddTripActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -379,26 +350,7 @@ final String TAG="AddTripActivity";
         timePickerDialog.show();
     }
 
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
-                Toast.makeText(AddTripActivity.this, (place.getAddress()+""+place.getLatLng()), Toast.LENGTH_SHORT).show();
 
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                // TODO: Handle the error.
-                Status status = Autocomplete.getStatusFromIntent(data);
-                Log.i(TAG, status.getStatusMessage());
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -408,24 +360,20 @@ final String TAG="AddTripActivity";
 
             Place place = Autocomplete.getPlaceFromIntent(data);
             edStartPoint.setText(place.getAddress());
-            startLat=place.getLatLng().latitude;
-            startLong=place.getLatLng().longitude;
+            startLat = place.getLatLng().latitude;
+            startLong = place.getLatLng().longitude;
 
 
-        }else if(requestCode == ENDKEY && resultCode == RESULT_OK){
+        } else if (requestCode == ENDKEY && resultCode == RESULT_OK) {
 
             Place place = Autocomplete.getPlaceFromIntent(data);
-             edEndPoint.setText(place.getAddress());
-           endLong=place.getLatLng().longitude;
-           endLat=place.getLatLng().latitude;
-            endMapLatLong=String.valueOf(place.getLatLng().latitude+", "+place.getLatLng().longitude);
+            edEndPoint.setText(place.getAddress());
+            endLong = place.getLatLng().longitude;
+            endLat = place.getLatLng().latitude;
+            endMapLatLong = String.valueOf(place.getLatLng().latitude + ", " + place.getLatLng().longitude);
 
 
-
-        }
-
-
-        else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
 
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(AddTripActivity.this, status.getStatusMessage(), Toast.LENGTH_SHORT).show();
