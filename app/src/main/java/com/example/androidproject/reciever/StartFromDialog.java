@@ -68,77 +68,38 @@ public class StartFromDialog extends Worker {
         map.put("way", dataForTrip[7]);
         //map.put("notes",dataForTrip[8]);
 
-       // FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).removeValue();
+        // FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).removeValue();
         //FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid());
         FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).
                 orderByChild("alarm").equalTo(dataForTrip[0])
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot appleSnapshot: snapshot.getChildren()) {
-                    appleSnapshot.getRef().removeValue();
-                }
-            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot appleSnapshot: snapshot.getChildren()) {
+                            appleSnapshot.getRef().removeValue();
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                    }
+                });
 
         FirebaseDatabase.getInstance().getReference().child("history" + user.getUid()).push().setValue(map);
         DataForAlarm.deleteAlarmForOneTrip(map);
 
+        Log.i("Main", "doWork: "+dataForTrip[2]);
+
+        String lat = dataForTrip[2];
+        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+lat+"&mode=d"));
+        intent.setPackage("com.google.android.apps.maps");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getApplicationContext().startActivity(intent);
+
+
         ///to open map
-        DialogPlus dialog = DialogPlus.newDialog(getApplicationContext())
-                .setContentHolder(new ViewHolder(R.layout.map_transportation))
-                .setExpanded(true, 1200)
-                .create();
-        dialog.show();
-        View view = dialog.getHolderView();
-        TextView tvBicycle = view.findViewById(R.id.tvBicycle);
-        TextView tvBus = view.findViewById(R.id.tvBus);
-        TextView tvWalk = view.findViewById(R.id.tvWalk);
-        TextView tvTwoWheeler = view.findViewById(R.id.tvTwoWheeler);
 
-
-        String lat=dataForTrip[2];
-        tvBicycle.setOnClickListener(m->{
-            Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+lat+"&mode=b"));
-            intent.setPackage("com.google.android.apps.maps");
-
-            if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
-                tvBicycle.getContext().startActivity(intent);
-                dialog.dismiss();
-            }});
-        tvBus.setOnClickListener(m->{
-            Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=d"));
-            intent.setPackage("com.google.android.apps.maps");
-
-            if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
-                tvBicycle.getContext().startActivity(intent);
-                dialog.dismiss();
-
-            }});
-        tvWalk.setOnClickListener(m->{
-            Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=w"));
-            intent.setPackage("com.google.android.apps.maps");
-
-            if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
-                tvBicycle.getContext().startActivity(intent);
-                dialog.dismiss();
-
-            }});
-        tvTwoWheeler.setOnClickListener(m->{
-            Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=l"));
-            intent.setPackage("com.google.android.apps.maps");
-
-            if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
-                tvBicycle.getContext().startActivity(intent);
-                dialog.dismiss();
-
-
-            }});
 
        /* FloatingBubblePermissions.startPermissionRequest((Activity) context);
         Intent intent= new Intent(getApplicationContext(), SimpleService.class);

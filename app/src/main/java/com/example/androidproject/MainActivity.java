@@ -66,6 +66,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);//************8
+        if( Data.FIREBASEAUTH.getCurrentUser()==null )
+        {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
+            finish();
+            return;
+        }
 
         Data.USER = Data.FIREBASEAUTH.getCurrentUser();
         setUpToolbar();
@@ -119,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                         Data.FIREBASEAUTH.signOut();
                         DataForAlarm.deleteAllAlarmsLogOut();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        finish();
 
                         break;
                     }

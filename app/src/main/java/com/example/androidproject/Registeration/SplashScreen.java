@@ -16,7 +16,7 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
 
         Thread background = new Thread() {

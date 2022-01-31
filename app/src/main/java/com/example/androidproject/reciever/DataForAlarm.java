@@ -88,35 +88,35 @@ public class DataForAlarm {
         //tripNotes = map.get("notes").toString();
 
         tripTime = tripAlarm.split(":");
-            hourOfTime = tripTime[0];
+        hourOfTime = tripTime[0];
 
-            detailsOfMinute = tripTime[1].split(" ");
-            minuteOfTime = detailsOfMinute[0];
-            minutes = Integer.parseInt(minuteOfTime);
-            amOrPm = detailsOfMinute[1];
-            if (amOrPm.equals("AM")) {
-                if (hourOfTime.equals("12")) {
-                    hours = 0;
-                } else {
-                    hours = Integer.parseInt(hourOfTime);
-                }
-            } else if (amOrPm.equals("PM")) {
-                hours = Integer.parseInt(hourOfTime) + 12;
+        detailsOfMinute = tripTime[1].split(" ");
+        minuteOfTime = detailsOfMinute[0];
+        minutes = Integer.parseInt(minuteOfTime);
+        amOrPm = detailsOfMinute[1];
+        if (amOrPm.equals("AM")) {
+            if (hourOfTime.equals("12")) {
+                hours = 0;
+            } else {
+                hours = Integer.parseInt(hourOfTime);
             }
-
-            tripCalendar = tripDate.split("/");
-            day = Integer.parseInt(tripCalendar[0]);
-            month = Integer.parseInt(tripCalendar[1]) - 1;
-            year = Integer.parseInt(tripCalendar[2]);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month, day, hours, minutes, 0);
-
-            String keyOfTrip = tripAlarm + "&" + tripDate + "&" + tripEndPoint +
-                    "&" + tripRepeat + "&" + tripStartPoint + "&" + tripStatus + "&" + tripName + "&" + tripWay;
-            setWorkAlarm(keyOfTrip, calendar);
-            Log.i("Main", "onCreate: " + year + " " + month + " " + day + " " + hours + " " + minutes + " ");
+        } else if (amOrPm.equals("PM")) {
+            hours = Integer.parseInt(hourOfTime) + 12;
         }
+
+        tripCalendar = tripDate.split("/");
+        day = Integer.parseInt(tripCalendar[0]);
+        month = Integer.parseInt(tripCalendar[1]) - 1;
+        year = Integer.parseInt(tripCalendar[2]);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, hours, minutes, 0);
+
+        String keyOfTrip = tripAlarm + "&" + tripDate + "&" + tripEndPoint +
+                "&" + tripRepeat + "&" + tripStartPoint + "&" + tripStatus + "&" + tripName + "&" + tripWay;
+        setWorkAlarm(keyOfTrip, calendar);
+        Log.i("Main", "onCreate: " + year + " " + month + " " + day + " " + hours + " " + minutes + " ");
+    }
 
 
     private static void setWorkAlarm(String keyOfTrip, Calendar calendar) {

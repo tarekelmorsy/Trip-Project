@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
     TextInputEditText tiEmail, tiPassword;
     LoginButton loginButton;
 
-   final String TAG = "LoginActivity";
+    final String TAG = "LoginActivity";
 
     private CallbackManager callbackManager;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -60,11 +60,11 @@ public class LoginActivity extends AppCompatActivity {
 //        FloatingBubblePermissions.startPermissionRequest(this);
 //        startService(new Intent(getApplicationContext(), SimpleService.class));
         Data.FIREBASEAUTH = FirebaseAuth.getInstance();
-         firebaseUser =  Data.FIREBASEAUTH.getCurrentUser();
+        firebaseUser =  Data.FIREBASEAUTH.getCurrentUser();
 
-     //Data.FIREBASEAUTH.Persistence.LOCAL;
+        //Data.FIREBASEAUTH.Persistence.LOCAL;
 
-       // firebase.auth.Auth.Persistence.LOCAL;
+        // firebase.auth.Auth.Persistence.LOCAL;
         tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                 login(email, password);
                 tiEmail.setText("");
                 tiPassword.setText("");
-              //  Log.i(TAG, "onClick: uid"+Data.USER.getUid());
+                //  Log.i(TAG, "onClick: uid"+Data.USER.getUid());
             }
         });
 
@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                 firebaseUser = firebaseAuth.getCurrentUser();//&&&&&&&
+                firebaseUser = firebaseAuth.getCurrentUser();//&&&&&&&
 
                 if (firebaseUser != null) {
 
@@ -125,6 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
 
+
                 }
 
 
@@ -149,14 +150,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
-;
+        ;
         loginButton.setReadPermissions("email", "public_profile");
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
 
-               handleFacebookAccessToken(loginResult.getAccessToken());
+                handleFacebookAccessToken(loginResult.getAccessToken());
                 Toast.makeText(LoginActivity.this, "successful login ", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);//**
                 startActivity(intent);
@@ -222,7 +223,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                             firebaseUser = Data.FIREBASEAUTH.getCurrentUser();///&&&&&&&&&&&&&&&&&&&
+                            firebaseUser = Data.FIREBASEAUTH.getCurrentUser();///&&&&&&&&&&&&&&&&&&&
                             Toast.makeText(LoginActivity.this, "user account is" + firebaseUser, Toast.LENGTH_SHORT).show();
                             updateUI(firebaseUser);
                         } else {
@@ -254,7 +255,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "user is " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
 
 
-      }
+        }
 
     }
 
@@ -275,19 +276,22 @@ public class LoginActivity extends AppCompatActivity {
                         if (!firebaseUser.isEmailVerified()) {
                             Toast.makeText(LoginActivity.this, "please verify your account " + Data.FIREBASEAUTH.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
                             //Toast.makeText(LoginActivity.this, "uid="+user.getUid() + Data.FIREBASEAUTH.getCurrentUser().getEmail(), Toast.LENGTH_LONG).show();
-                         //   Log.i(TAG, "onComplete: xxxxxxxxxxxxxxxx"+Data.FIREBASEAUTH.getCurrentUser().getUid());
+                            //   Log.i(TAG, "onComplete: xxxxxxxxxxxxxxxx"+Data.FIREBASEAUTH.getCurrentUser().getUid());
 
                         } else {
 
                             Toast.makeText(LoginActivity.this, "verified account ", Toast.LENGTH_LONG).show();
-                               Log.i(TAG, "onComplete: uidxx"+Data.FIREBASEAUTH.getCurrentUser().getUid());
+                            Log.i(TAG, "onComplete: uidxx"+Data.FIREBASEAUTH.getCurrentUser().getUid());
                             Toast.makeText(LoginActivity.this, "verified account "+Data.FIREBASEAUTH.getCurrentUser().getUid(), Toast.LENGTH_LONG).show();
 
                             SharedPreferences preferences2 = getSharedPreferences("c", Context.MODE_PRIVATE);
                             preferences2.edit().putString("id", Data.FIREBASEAUTH.getCurrentUser().getUid()).apply();
                             //Toast.makeText(LoginActivity.this, "correct user", Toast.LENGTH_LONG).show();
+                            Log.i(TAG, "onCurrentAccessTokenChanged: Add Alarms for pervious");
+                            Data.USER = Data.FIREBASEAUTH.getCurrentUser();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
+                            AddAdapter.deleteAndFillAlarm();
                             finish();
                         }
 
