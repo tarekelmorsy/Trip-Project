@@ -61,13 +61,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
+        <activity
             android:name=".reciever.DialogActivity"
-            android:theme="@style/Theme.AppCompat.transparent"
-            android:exported="false" />
-
-
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.transparent" />
 
         <activity
             android:name=".Registeration.RegisterActivity"

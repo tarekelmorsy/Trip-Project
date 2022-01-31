@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
-import com.example.androidproject.SimpleService;
 import com.example.androidproject.data.Data;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -34,8 +33,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-import com.siddharthks.bubbles.FloatingBubblePermissions;
 
 
 public class LoginActivity extends AppCompatActivity {

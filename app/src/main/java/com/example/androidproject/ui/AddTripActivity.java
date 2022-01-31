@@ -30,14 +30,11 @@ import com.example.androidproject.data.Data;
 import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.database.FirebaseDatabase;
@@ -90,7 +87,7 @@ final String TAG="AddTripActivity";
         Data.USER= Data.FIREBASEAUTH.getCurrentUser();
        // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
-        Log.i(TAG, "onCreate: uidddddddddddddddddddddddddddddddddd"+MainActivity.storedUid);
+        Log.i(TAG, "onCreate: uidddddddddddddddddddddddddddddddddd"+ MainActivity.storedUid);
         AddAdapter.screen=1;
          scoresRef2 = FirebaseDatabase.getInstance().getReference().child("trips" + MainActivity.storedUid);
         scoresRef2.keepSynced(true);
@@ -102,7 +99,6 @@ final String TAG="AddTripActivity";
             Places.initialize(getApplicationContext(), Data.KEYMAP);
         }
 
-           PlacesClient placesClient=Places.createClient(this);
 
 /*
 
@@ -227,7 +223,7 @@ final String TAG="AddTripActivity";
       
       
       
-              if(!MainActivity.storedPreference.equals("null")){
+        if(!MainActivity.storedPreference.equals("null")){
 
         Map<String, Object> map = new HashMap<>();
         map.put("endPoint", edEndPoint.getText().toString());
@@ -267,7 +263,7 @@ final String TAG="AddTripActivity";
 
                 });*/
             }
-        else if(! MainActivity.storedUid.equals("no id exist")){
+        else if(!MainActivity.storedUid.equals("no id exist")){
              Map<String, Object> map = new HashMap<>();
         map.put("endPoint", edEndPoint.getText().toString());
         map.put("startPoint", edStartPoint.getText().toString());
@@ -282,15 +278,12 @@ final String TAG="AddTripActivity";
         map.put("startLong", startLong);
         map.put("alarm", tvTime.getText().toString());
         map.put("date", tvDate.getText().toString());
-
-          
-          
             scoresRef2.push().setValue(map)
                     .addOnSuccessListener(unused -> Toast.makeText(AddTripActivity.this, "Data Insert is Successfully.", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> {
                         Toast.makeText(AddTripActivity.this, "Error while Insertion", Toast.LENGTH_SHORT).show();
                     });
-            DataForAlarm.addAlarmForTrip(map);
+            //DataForAlarm.addAlarmForTrip(map);
 
                     }
         }

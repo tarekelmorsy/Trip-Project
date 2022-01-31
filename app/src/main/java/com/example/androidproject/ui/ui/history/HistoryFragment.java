@@ -1,21 +1,14 @@
 package com.example.androidproject.ui.ui.history;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,8 +28,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -86,17 +77,18 @@ AddAdapter.screen=3;
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                        Trip trip=dataSnapshot.getValue(Trip.class);
-                        arrayTrips.add(trip);
+                    if(snapshot!=null) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Trip trip = dataSnapshot.getValue(Trip.class);
+                            arrayTrips.add(trip);
+                        }
+                        for (Trip trip : arrayTrips) {
+
+                            latLngs.add(new LatLng(trip.getEndLat(), trip.getEndLong()));
+                            latLngs.add(new LatLng(trip.getStartLat(), trip.getStartLong()));
+
+                        }
                     }
-                    for (Trip trip :arrayTrips){
-
-                        latLngs.add(new LatLng(trip.getEndLat(),trip.getEndLong()));
-                        latLngs.add(new LatLng(trip.getStartLat(),trip.getStartLong()));
-
-                    }
-
 
 
                 }
@@ -113,10 +105,10 @@ AddAdapter.screen=3;
 
         }
 
-        else if(! MainActivity.storedUid.equals("no id exist")){
+        else if(!MainActivity.storedUid.equals("no id exist")){
 
             arrayTrips=new ArrayList<>();//map edit
-            databaseReference =scoresRef2.child("history"+  MainActivity.storedUid) ;
+            databaseReference =scoresRef2 ;
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

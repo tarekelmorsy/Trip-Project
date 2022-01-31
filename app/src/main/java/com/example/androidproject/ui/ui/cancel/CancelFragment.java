@@ -1,7 +1,5 @@
 package com.example.androidproject.ui.ui.cancel;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.androidproject.MainActivity;
 import com.example.androidproject.R;
-import com.example.androidproject.data.Data;
 import com.example.androidproject.data.Trip;
  import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;

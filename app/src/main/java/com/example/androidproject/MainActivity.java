@@ -94,57 +94,57 @@ public class MainActivity extends AppCompatActivity {
 
         if (storedUid.equals("no id exist") && storedPreference.equals("null")) {
 
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
-                finish();
-                return;
+            finish();
+            return;
 
-            }
+        }
 
 
 //            Toast.makeText(MainActivity.this, Data.USER.getEmail().toString(), Toast.LENGTH_SHORT).show();
 
 
-            mAppBarConfiguration = new AppBarConfiguration.Builder()
-                    .setOpenableLayout(drawer)
-                    .build();
-            NavigationView navigationView = findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    switch (item.getItemId()) {
+        mAppBarConfiguration = new AppBarConfiguration.Builder()
+                .setOpenableLayout(drawer)
+                .build();
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
 
-                        case R.id.nav_home: {
-                            Data.FIREBASEAUTH.signOut();
-                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    case R.id.nav_home: {
+                        Data.FIREBASEAUTH.signOut();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
 
-                            break;
-                        }
-                        case R.id.nav_ar: {
-
-                        }
-
-
-                        case R.id.nav_En: {
-                        }
-
+                        break;
+                    }
+                    case R.id.nav_ar: {
 
                     }
-                    return false;
+
+
+                    case R.id.nav_En: {
+                    }
+
+
                 }
-            });
+                return false;
+            }
+        });
 
 
-            bottomNav = findViewById(R.id.bottom_navigation);
-            bottomNav.setOnNavigationItemSelectedListener(navListener);
+        bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-            // as soon as the application opens the first
-            // fragment should be shown to the user
-            // in this case it is algorithm fragment
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        // as soon as the application opens the first
+        // fragment should be shown to the user
+        // in this case it is algorithm fragment
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
 
-        }
+    }
 
 
 

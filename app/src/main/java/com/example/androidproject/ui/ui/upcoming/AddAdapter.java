@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,10 +45,8 @@ import com.example.androidproject.reciever.DataForAlarm;
 import com.example.androidproject.ui.AddTripActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
@@ -65,7 +62,6 @@ import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.ViewHolder;
 import com.siddharthks.bubbles.FloatingBubblePermissions;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -73,9 +69,7 @@ import java.util.Map;
 
 public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewHolder> {
     int i = 0;
-    static ArrayList<String> tripDate= new ArrayList<>();
-    static ArrayList<String> tripHour= new ArrayList<>();
-    static ArrayList<String> tripStatus= new ArrayList<>();
+
     AlertDialog alertDialog;
     StringBuilder sb;
     public static int screen=1;
@@ -98,10 +92,10 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
     @Override
     protected void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") final int position, @NonNull Trip trip) {
 
-            viewBinderHelper.setOpenOnlyOne(true);
+        viewBinderHelper.setOpenOnlyOne(true);
         viewBinderHelper.bind(holder.swipeRefreshLayout, String.valueOf(trip.getTripName()));
         viewBinderHelper.closeLayout(trip.getTripName());
-       // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        // FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         user= firebaseAuth.getCurrentUser();
 
         DatabaseReference scoresRefh1 = FirebaseDatabase.getInstance().getReference().child("history"+ MainActivity.storedPreference);
@@ -145,72 +139,71 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                 sb = new StringBuilder();
-                                            Log.i("AddAdapter", "onChildAdded: bbbbbbbbbb "+sb.toString());
-                                            if(trip.getNotes()!=null)
-                                            sb.append(trip.getNotes());
+                                sb = new StringBuilder();
+                                Log.i("AddAdapter", "onChildAdded: bbbbbbbbbb "+sb.toString());
+                                if(trip.getNotes()!=null)
+                                    sb.append(trip.getNotes());
 
-                                            sb.append(userNote.getText().toString()+"#");
+                                sb.append(userNote.getText().toString()+"#");
 
-                                            //  String str= sb.toString();
-                                            Map<String, Object> map = new HashMap<>();
-                                            map.put("alarm", trip.getAlarm());
-                                            map.put("date", trip.getDate());
-                                            map.put("endPoint", trip.getEndPoint());
-                                            map.put("startPoint", trip.getStartPoint());
-                                            map.put("tripName", trip.getTripName());
-                                            map.put("repeat", trip.getRepeat());
-                                            map.put("way", trip.getWay());
-                                            map.put("status", Data.UPCOMING);
-                                            map.put("notes",sb.toString() );
-                                            //  trip.setNotes(sb.toString());
-                                            Log.i("AddAdapter", "onChildAdded: result "+sb.toString());
+                                //  String str= sb.toString();
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("alarm", trip.getAlarm());
+                                map.put("date", trip.getDate());
+                                map.put("endPoint", trip.getEndPoint());
+                                map.put("startPoint", trip.getStartPoint());
+                                map.put("tripName", trip.getTripName());
+                                map.put("repeat", trip.getRepeat());
+                                map.put("way", trip.getWay());
+                                map.put("status", Data.UPCOMING);
+                                map.put("notes",sb.toString() );
+                                //  trip.setNotes(sb.toString());
+                                Log.i("AddAdapter", "onChildAdded: result "+sb.toString());
 
-                                            sb.setLength(0);
-                                            if(!MainActivity.storedPreference.equals("null")){
-                                                scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
+                                sb.setLength(0);
+                                if(!MainActivity.storedPreference.equals("null")){
+                                    scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
 
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-
-
-                                                }
-                                            }) ;}
-
-else if(! MainActivity.storedUid.equals("no id exist")){
-
-                                                scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-        @Override
-        public void onSuccess(Void unused) {
-
-        }
-    }).addOnFailureListener(new OnFailureListener() {
-        @Override
-        public void onFailure(@NonNull Exception e) {
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
 
 
-        }
-    }) ;
+                                        }
+                                    }) ;}
+
+                                else if(! MainActivity.storedUid.equals("no id exist")){
+
+                                    scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
 
 
-
-
-}
+                                        }
+                                    }) ;
 
 
 
 
-                                            //else
+                                }
 
 
-           };}).create().show();
+
+
+                                //else
+
+
+                            };}).create().show();
 
             }});
-
 
 
         if (trip.getStatus().equals(Data.UPCOMING)) {
@@ -225,20 +218,13 @@ else if(! MainActivity.storedUid.equals("no id exist")){
 
         }
 
-        else if (trip.getStatus().equals(Data.UPCOMINGR1)) {
-            holder.tvStatus.setText(R.string.done);
-            holder.tvRepeat.setVisibility(View.VISIBLE);
-            holder.tvRepeat.setText("going");
-        }else if (trip.getStatus().equals(Data.UPCOMINGR2)) {
-            holder.tvStatus.setText(R.string.done);
-            holder.tvRepeat.setVisibility(View.VISIBLE);
-            holder.tvRepeat.setText(" coming back"); }
+        if (trip.getStatus().equals(1)){
+
+
+        }
 
 
 
-        tripDate.add(position,trip.getDate());
-        tripHour.add(position,trip.getAlarm());
-        tripStatus.add(position,trip.getStatus());
 
 
         holder.btCancel.setOnClickListener(v -> {
@@ -249,7 +235,6 @@ else if(! MainActivity.storedUid.equals("no id exist")){
 //                map.put("UID", trip.getUID());
 //            if (trip.getToken() != null)
 //                map.put("UID", trip.getToken());
-            if(!MainActivity.storedPreference.equals("null")){
 
             map.put("alarm", trip.getAlarm());
             map.put("date", trip.getDate());
@@ -263,79 +248,63 @@ else if(! MainActivity.storedUid.equals("no id exist")){
             AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
             builder.setTitle("Are You Sure?");
             builder.setMessage("Cancel this Trip.");
-            builder.setPositiveButton("Yes", (dialog, which) -> {
-                FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
-                FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map);
-              
-            builder.setPositiveButton(R.string.cancel, (dialog2, which2) -> {
-                scoresReft1.child(getRef(position).getKey()).removeValue();
-                scoresRefh1.push().setValue(map);
 
-                scoresRefc1.push().setValue(map)
-                        .addOnSuccessListener(unused ->
-                                Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
-                        });
-                DataForAlarm.deleteAlarmForOneTrip(map);
-            });
-            builder.setNegativeButton("Cancel", (dialog2, which2) -> {
-                Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
-            });
-            builder.show();
+            if(!MainActivity.storedPreference.equals("null")){
+                builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
+                    scoresReft1.child(getRef(position).getKey()).removeValue();
+                    scoresRefh1.push().setValue(map);
 
-        }
-            );}
+                    scoresRefc1.push().setValue(map)
+                            .addOnSuccessListener(unused ->
+                                    Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
 
-
-
-
-        else if(! MainActivity.storedUid.equals("no id exist")){
-
-                map.put("alarm", trip.getAlarm());
-                map.put("date", trip.getDate());
-                map.put("endPoint", trip.getEndPoint());
-                map.put("startPoint", trip.getStartPoint());
-                map.put("tripName", trip.getTripName());
-                map.put("repeat", trip.getRepeat());
-                map.put("way", trip.getWay());
-                map.put("status", Data.CANCEL);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
-                builder.setTitle("Are You Sure?");
-                builder.setMessage("Cancel this Trip.");
-                builder.setPositiveButton("Yes", (dialog, which) -> {
-                            FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).child(getRef(position).getKey()).removeValue();
-                            FirebaseDatabase.getInstance().getReference().child("history"+user.getUid()).push().setValue(map);
-
-                            builder.setPositiveButton(R.string.cancel, (dialog2, which2) -> {
-                                scoresReft2.child(getRef(position).getKey()).removeValue();
-                                scoresRefh2.push().setValue(map);
-
-                                scoresRefc2.push().setValue(map)
-                                        .addOnSuccessListener(unused ->
-                                                Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
-                                        .addOnFailureListener(e -> {
-                                            Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
-                                        });
-                                DataForAlarm.deleteAlarmForOneTrip(map);
                             });
-                            builder.setNegativeButton("Cancel", (dialog2, which2) -> {
-                                Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
+
+
+                });
+                builder.setNegativeButton("Cancel", (dialog, which) -> {
+                    Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
+                });
+                builder.show();
+
+
+            }
+
+            else if(!MainActivity.storedUid.equals("no id exist")){
+
+                builder.setPositiveButton(R.string.cancel, (dialog, which) -> {
+                    scoresReft2.child(getRef(position).getKey()).removeValue();
+                    scoresRefh2.push().setValue(map);
+
+                    scoresRefc2.push().setValue(map)
+                            .addOnSuccessListener(unused ->
+                                    Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+
                             });
-                            builder.show();
-
-                        }
-                );
 
 
+                });
+                builder.setNegativeButton("Cancel", (dialog, which) -> {
+                    Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
+                });
+                builder.show();
 
 
 
-}
+
+
+            }
+
+
+
+
+
 
         });///
-
 
         holder.ivNotes.setOnClickListener(v -> {
             // Toast.makeText(v.getContext(), "position: "+position, Toast.LENGTH_SHORT).show();
@@ -380,8 +349,8 @@ else if(! MainActivity.storedUid.equals("no id exist")){
             TextView tvDate = view.findViewById(R.id.tvDate);
             TextView tvTime = view.findViewById(R.id.tvTime);
 
-            TextView tvRepeat = view.findViewById(R.id.tvRepeat);
-
+            edStartPoint.setFocusable(false);
+            edEndPoint.setFocusable(false);
             AutoCompleteTextView repeat = view.findViewById(R.id.repeat);
             AutoCompleteTextView way = view.findViewById(R.id.way);
             Button btUpdate = view.findViewById(R.id.btAdd);
@@ -395,9 +364,17 @@ else if(! MainActivity.storedUid.equals("no id exist")){
             ArrayAdapter<String> arrayAdapterRepeat;
             ArrayAdapter<String> arrayAdapterWay;
             // add list in repeat and way
-            arrayAdapterRepeat = new ArrayAdapter(holder.txvEndPoint.getContext(), R.layout.tv_entity, AddTripActivity.repeatList);
+              ArrayList<String> repeatList = new ArrayList<>();
+              ArrayList<String> wayList = new ArrayList<>();
+            wayList.add(imvDate.getContext().getString(R.string.oneWay));
+            wayList.add(imvDate.getContext().getString(R.string.towWay));
+            repeatList.add(imvDate.getContext().getString(R.string.noRepeat));
+            repeatList.add(imvDate.getContext().getString(R.string.repeatDaily));
+            repeatList.add(imvDate.getContext().getString(R.string.repeatWeekly));
+            repeatList.add(imvDate.getContext().getString(R.string.repeatMonthly));
+            arrayAdapterRepeat = new ArrayAdapter(holder.txvEndPoint.getContext(), R.layout.tv_entity,  repeatList);
             repeat.setAdapter(arrayAdapterRepeat);
-            arrayAdapterWay = new ArrayAdapter(holder.tvTime.getContext(), R.layout.tv_entity, AddTripActivity.wayList);
+            arrayAdapterWay = new ArrayAdapter(holder.tvTime.getContext(), R.layout.tv_entity,  wayList);
             way.setAdapter(arrayAdapterWay);
 
             //update title and button text
@@ -458,50 +435,48 @@ else if(! MainActivity.storedUid.equals("no id exist")){
                     map.put("repeat", repeat.getText().toString());
                     map.put("way", way.getText().toString());
                     map.put("status", Data.UPCOMING);
-if(!MainActivity.storedPreference.equals("null")){///
-    scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    if(!MainActivity.storedPreference.equals("null")){///
+                        scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
 
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
+                            }
+                        });
+                    }
 
-                        }
-                    });
-                }
+                    else if(! MainActivity.storedUid.equals("no id exist")){
 
-                else if(! MainActivity.storedUid.equals("no id exist")){
+                        scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
 
-    scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-        @Override
-        public void onSuccess(Void unused) {
-            Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-        }
-    }).addOnFailureListener(new OnFailureListener() {
-        @Override
-        public void onFailure(@NonNull Exception e) {
-            Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-
-        }
-    });
-
-
-
-
-}
+                            }
+                        });
 
 
 
 
-                    deleteAndFillAlarm();
+                    }
+
+
+
+
 
                 } else if (screen == 2) {///
                     Map<String, Object> map = new HashMap<>();
@@ -513,58 +488,58 @@ if(!MainActivity.storedPreference.equals("null")){///
                     map.put("repeat", repeat.getText().toString());
                     map.put("way", way.getText().toString());
                     map.put("status", Data.CANCEL);
-            if(!MainActivity.storedPreference.equals("null")){
-                scoresRefh1.push().setValue(map);
+                    if(!MainActivity.storedPreference.equals("null")){
+                        scoresRefh1.push().setValue(map);
 
 
-                scoresRefc1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                        }
-                    });
-                }////
+                        scoresRefc1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+
+                            }
+                        });
+                    }////
                     else if(! MainActivity.storedUid.equals("no id exist")){
-                scoresRefh2.push().setValue(map);
+                        scoresRefh2.push().setValue(map);
 
 
-                scoresRefc2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+                        scoresRefc2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                dialog.dismiss();
+
+                            }
+                        });
+
+
+
+
+
+
+
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-
-                    }
-                });
-
-
-
-
-
-
-
-            }
 
 
 
                 }
 
-             });
+            });
 
-                    deleteAndFillAlarm();
 
         });
 
@@ -575,39 +550,37 @@ if(!MainActivity.storedPreference.equals("null")){///
                 builder.setTitle("Are You Sure?");
                 builder.setMessage("Delete data cant be Undo.");
                 builder.setPositiveButton("Delete", (dialog, which) -> {
-if(!MainActivity.storedPreference.equals("null")){
-                    if (screen == 1) {
-                        scoresReft1.child(getRef(position).getKey()).removeValue();
-                    } else if (screen == 2) {
-                        scoresRefc1.child(getRef(position).getKey()).removeValue();
+                    if(!MainActivity.storedPreference.equals("null")){
+                        if (screen == 1) {
+                            scoresReft1.child(getRef(position).getKey()).removeValue();
+                        } else if (screen == 2) {
+                            scoresRefc1.child(getRef(position).getKey()).removeValue();
 
 
-                    } else if (screen == 3) {
-                     scoresRefh1.child(getRef(position).getKey()).removeValue();
+                        } else if (screen == 3) {
+                            scoresRefh1.child(getRef(position).getKey()).removeValue();
 
 
+                        }
+
+                    }
+                    else if(! MainActivity.storedUid.equals("no id exist")){
+
+                        if (screen == 1) {
+                            scoresReft2.child(getRef(position).getKey()).removeValue();
+                        } else if (screen == 2) {
+                            scoresRefc2.child(getRef(position).getKey()).removeValue();
+
+
+                        } else if (screen == 3) {
+                            scoresRefh2.child(getRef(position).getKey()).removeValue();
+
+
+                        }
 
                     }
 
-                }
-else if(! MainActivity.storedUid.equals("no id exist")){
 
-    if (screen == 1) {
-        scoresReft2.child(getRef(position).getKey()).removeValue();
-    } else if (screen == 2) {
-        scoresRefc2.child(getRef(position).getKey()).removeValue();
-
-
-    } else if (screen == 3) {
-        scoresRefh2.child(getRef(position).getKey()).removeValue();
-
-
-    }
-
-}
-
-
-                    deleteAndFillAlarm();
 
 
                 });
@@ -633,15 +606,15 @@ else if(! MainActivity.storedUid.equals("no id exist")){
             TextView tvTwoWheeler = view.findViewById(R.id.tvTwoWheeler);
 
 
-            String lat=trip.getLatLogEnd();
+            String lat=trip.getEndPoint();
             tvBicycle.setOnClickListener(m->{
-                Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=b"));
+                Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+lat+"&mode=b"));
                 intent.setPackage("com.google.android.apps.maps");
 
                 if(intent.resolveActivity(tvBicycle.getContext().getPackageManager())!=null){
                     tvBicycle.getContext().startActivity(intent);
                     dialog.dismiss();
-            }});
+                }});
             tvBus.setOnClickListener(m->{
                 Intent intent=new Intent(Intent.ACTION_VIEW,Uri.parse("google.navigation:q="+lat+"&mode=d"));
                 intent.setPackage("com.google.android.apps.maps");
@@ -680,35 +653,35 @@ else if(! MainActivity.storedUid.equals("no id exist")){
             map.put("repeat", trip.getRepeat());
             map.put("way", trip.getWay());
             map.put("status", Data.DONE);
-
-
-map.put("endLat", trip.getEndLat());
+            map.put("endLat", trip.getEndLat());
             map.put("latLogEnd", trip.getLatLogEnd());
             map.put("endLong", trip.getEndLong());
             map.put("startLat", trip.getStartLat());
             map.put("startLong", trip.getStartLong());
 
-            if(MainActivity.storedPreference.equals("null")){
-            if (screen == 1) {
-                scoresReft1.child(getRef(position).getKey()).removeValue();
-            } else if (screen == 2) {
-                scoresRefc1.child(getRef(position).getKey()).removeValue();
-            
-            
-                scoresRefh1.push().setValue(map)
-                    .addOnSuccessListener(unused ->
-                            Toast.makeText(holder.txvEndPoint.getContext(), "Trip Done is Successfully.", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
-                    });
+            if(!MainActivity.storedPreference.equals("null")){
+                if (screen == 1) {
+                    scoresReft1.child(getRef(position).getKey()).removeValue();
+                } else if (screen == 2) {
+                    scoresRefc1.child(getRef(position).getKey()).removeValue();
 
-                FloatingBubblePermissions.startPermissionRequest((Activity) holder.btStart.getContext());
-                Intent intent= new Intent(getApplicationContext(), SimpleService.class);
-                intent.putExtra("note",trip.getNotes());
-                getApplicationContext().startService(intent);
 
-        }}
-    else if (! MainActivity.storedUid.equals("no id exist")){
+                    scoresRefh1.push().setValue(map)
+                            .addOnSuccessListener(unused ->
+                                    Toast.makeText(holder.txvEndPoint.getContext(), "Trip Done is Successfully.", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+                            });
+
+                    FloatingBubblePermissions.startPermissionRequest((Activity) holder.btStart.getContext());
+                    Intent intent= new Intent(getApplicationContext(), SimpleService.class);
+                    intent.putExtra("note",trip.getNotes());
+                    getApplicationContext().startService(intent);
+
+                }}
+            else if (!MainActivity.storedUid.equals("no id exist")){
+
+
                 if (screen == 1) {
                     scoresReft2.child(getRef(position).getKey()).removeValue();
                 } else if (screen == 2) {
@@ -729,57 +702,14 @@ map.put("endLat", trip.getEndLat());
                 getApplicationContext().startService(intent);
 
             }
-                  DataForAlarm.deleteAlarmForOneTrip(map);
+            Toast.makeText(holder.txvEndPoint.getContext(), "Done while Cancel", Toast.LENGTH_SHORT).show();
 
-
-
-
-                        Toast.makeText(holder.txvEndPoint.getContext(), "Done while Cancel", Toast.LENGTH_SHORT).show();
-
-                    });
-            //try {
-
-
-           // Uri uri=Uri.parse("https://www.ggogle.co.in/map/dir/Mumbai/Thane");
-            /*
-}*/
-//holder.tvSetWay.getContext().startActivity(intent1);//}
-           /* catch (ActivityNotFoundException e){
-                Uri uri=Uri.parse("https://play.google.com/stor/apps/details?id=com.googel.android.apps.maps");
-                Intent intent=new Intent(Intent.ACTION_VIEW,uri);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                holder.tvSetWay.getContext().startActivity(intent);}
-*/
-        }
-
-
-
-
-    public static void deleteAndFillAlarm() {
-
-        ArrayList<Trip> arrayTrips = new ArrayList<>();
-        DataForAlarm.DeleteAllAlarms();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("trips" + Data.USER.getUid());
-
-        databaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-                    Trip trip = dataSnapshot.getValue(Trip.class);
-                    arrayTrips.add(trip);
-                }
-                Log.i("Main", "onDeleteandFill: Array Size is " + arrayTrips.size());
-                //Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
-                DataForAlarm.setDataForAlarm(arrayTrips);
-            }
         });
     }
 
 
-
     class MyViewHolder extends RecyclerView.ViewHolder {
-
-        TextView txvStartPoint, txvEndPoint, tvRepeat,txvTripNam, tvDate, tvTime, tvStatus, btStart, btCancel,tvSetWay,tvSeRepeat;
+        TextView txvStartPoint, txvEndPoint, txvTripNam, tvDate, tvTime, tvStatus, btStart, btCancel,tvSetWay,tvSeRepeat;
         ImageView ivNotes, ivDelete, ivEdit,ivSetNotes;
         SwipeRevealLayout swipeRefreshLayout;
         ChipGroup chipGroup;
@@ -804,7 +734,6 @@ map.put("endLat", trip.getEndLat());
             tvSetWay=itemView.findViewById(R.id.tvSetWay);
             tvSeRepeat=itemView.findViewById(R.id.tvSetRepeat);
             ivSetNotes=itemView.findViewById(R.id.ivSetNotes);
-            tvRepeat=itemView.findViewById(R.id.tvRepeat);
             swipeRefreshLayout = itemView.findViewById(R.id.main_container);
             edNote=itemView.findViewById(R.id.ed_note_dialog);
         }
@@ -826,34 +755,5 @@ map.put("endLat", trip.getEndLat());
                 }
             }
         }
-
-
-
-
-
-        /*databaseReference.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    Trip trip = dataSnapshot.getValue(Trip.class);
-                    arrayTrips.add(trip);
-                }
-                Log.i("Main", "onDeleteandFill: Array Size is "+ arrayTrips.size());
-                Log.i("Main", "onDeleteandFill: Array is "+ arrayTrips);
-                DataForAlarm.setDataForAlarm(arrayTrips);
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
-
-//        FirebaseRecyclerOptions<Trip> options=new FirebaseRecyclerOptions.Builder<Trip>()
-//                .setQuery(FirebaseDatabase.getInstance().getReference().child("trips"+ Data.USER.getUid()),Trip.class).build();
-
-
-
-}
+    }
 }
