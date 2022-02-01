@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -86,6 +87,12 @@ public class DialogActivity extends AppCompatActivity {
         alertdialog.setNeutralButton("Start", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 Toast.makeText(DialogActivity.this, "Trip Started!", Toast.LENGTH_SHORT).show();
+                String[] dataForTrip = keyOfTrip.split("&");
+                String lat = dataForTrip[2];
+                Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+lat+"&mode=d"));
+                intent.setPackage("com.google.android.apps.maps");
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                DialogActivity.this.startActivity(intent);
                 sendActionForStart(keyOfTrip);
                 mediaPlayer.stop();
                 finish();
@@ -136,7 +143,7 @@ public class DialogActivity extends AppCompatActivity {
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("TRIP REMINDER")
                 .setContentText("Start Now !")
-                .setSmallIcon(R.mipmap.ic_trip)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 

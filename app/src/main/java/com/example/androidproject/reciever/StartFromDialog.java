@@ -68,6 +68,7 @@ public class StartFromDialog extends Worker {
         map.put("way", dataForTrip[7]);
         //map.put("notes",dataForTrip[8]);
 
+
         // FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).removeValue();
         //FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid());
         FirebaseDatabase.getInstance().getReference().child("trips"+user.getUid()).
@@ -88,17 +89,6 @@ public class StartFromDialog extends Worker {
 
         FirebaseDatabase.getInstance().getReference().child("history" + user.getUid()).push().setValue(map);
         DataForAlarm.deleteAlarmForOneTrip(map);
-
-        Log.i("Main", "doWork: "+dataForTrip[2]);
-
-        String lat = dataForTrip[2];
-        Intent intent=new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q="+lat+"&mode=d"));
-        intent.setPackage("com.google.android.apps.maps");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getApplicationContext().startActivity(intent);
-
-
-        ///to open map
 
 
        /* FloatingBubblePermissions.startPermissionRequest((Activity) context);
