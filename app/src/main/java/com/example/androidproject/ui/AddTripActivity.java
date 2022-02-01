@@ -171,9 +171,7 @@ public class AddTripActivity extends AppCompatActivity {
         });
 
         btAdd.setOnClickListener(v -> {
-            insertData();
-            clearAll();
-            finish();
+            handleError();
         });
 
 
@@ -262,23 +260,26 @@ public class AddTripActivity extends AppCompatActivity {
 
 
     private void handleError() {
-        if (edEndPoint.getText().toString() == "") {
-            edEndPoint.setError("please enter End Point");
-
-        } else if (edTripName.getText().toString() == "") {
+        if (edTripName.getText().toString().equals("")) {
             edTripName.setError("please enter Trip Name");
 
-        } else if (edStartPoint.getText().toString() == "") {
+        } else if (edStartPoint.getText().toString().equals("")) {
+            edStartPoint.setError("please enter End Point");
+
+        } else if (edEndPoint.getText().toString().equals("")) {
             edEndPoint.setError("please enter Start Point");
 
-        } else if (tvDate.getText().toString() == "") {
+        }else if (tvDate.getText().toString().equals("")) {
             tvDate.setError("please enter Date");
 
-        } else if (tvTime.getText().toString() == "") {
-            tvTime.setError("please enter Date");
+        } else if (tvTime.getText().toString().equals("")) {
+            tvTime.setError("please enter Time");
 
+        }else {
+            insertData();
+            clearAll();
+            finish();
         }
-
     }
 
     private void clearAll() {

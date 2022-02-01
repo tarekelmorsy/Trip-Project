@@ -31,6 +31,7 @@ import com.example.androidproject.ui.ui.cancel.CancelFragment;
 import com.example.androidproject.ui.ui.upcoming.AddAdapter;
 import com.example.androidproject.ui.ui.upcoming.HomeFragment;
 import com.example.androidproject.ui.ui.history.HistoryFragment;
+import com.facebook.FacebookSdk;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -66,6 +67,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //  FirebaseDatabase.getInstance().setPersistenceEnabled(true);//************8
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        Log.d("AppLog", "key:" + FacebookSdk.getApplicationSignature(this)+"=");
         if( Data.FIREBASEAUTH.getCurrentUser()==null )
         {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));

@@ -131,72 +131,76 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         holder.ivSetNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater li = LayoutInflater.from(getApplicationContext());
-                View promptsView = li.inflate(R.layout.dialog_edittext, null);
-                final EditText userNote = promptsView.findViewById(R.id.ed_note_dialog);
-                new AlertDialog.Builder(v.getContext()).setMessage(" Note")
-                        .setView(promptsView)
-                        .setNegativeButton("cancle", null)
-                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                    View promptsView = li.inflate(R.layout.dialog_edittext, null);
+                    final EditText userNote = promptsView.findViewById(R.id.ed_note_dialog);
+                    new AlertDialog.Builder(v.getContext()).setMessage(" Note")
+                            .setView(promptsView)
+                            .setNegativeButton("cancle", null)
+                            .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                                sb = new StringBuilder();
-                                Log.i("AddAdapter", "onChildAdded: bbbbbbbbbb " + sb.toString());
-                                if (trip.getNotes() != null)
-                                    sb.append(trip.getNotes());
+                                    sb = new StringBuilder();
+                                    Log.i("AddAdapter", "onChildAdded: bbbbbbbbbb " + sb.toString());
+                                    if (trip.getNotes() != null)
+                                        sb.append(trip.getNotes());
 
-                                sb.append(userNote.getText().toString() + "#");
+                                    sb.append(userNote.getText().toString() + "#");
 
-                                //  String str= sb.toString();
-                                Map<String, Object> map = new HashMap<>();
-                                map.put("alarm", trip.getAlarm());
-                                map.put("date", trip.getDate());
-                                map.put("endPoint", trip.getEndPoint());
-                                map.put("startPoint", trip.getStartPoint());
-                                map.put("tripName", trip.getTripName());
-                                map.put("repeat", trip.getRepeat());
-                                map.put("way", trip.getWay());
-                                map.put("status", Data.UPCOMING);
-                                map.put("notes", sb.toString());
-                                //  trip.setNotes(sb.toString());
-                                Log.i("AddAdapter", "onChildAdded: result " + sb.toString());
+                                    //  String str= sb.toString();
+                                    Map<String, Object> map = new HashMap<>();
+                                    map.put("alarm", trip.getAlarm());
+                                    map.put("date", trip.getDate());
+                                    map.put("endPoint", trip.getEndPoint());
+                                    map.put("startPoint", trip.getStartPoint());
+                                    map.put("tripName", trip.getTripName());
+                                    map.put("repeat", trip.getRepeat());
+                                    map.put("way", trip.getWay());
+                                    map.put("status", Data.UPCOMING);
+                                    map.put("notes", sb.toString());
+                                    //  trip.setNotes(sb.toString());
+                                    Log.i("AddAdapter", "onChildAdded: result " + sb.toString());
 
-                                sb.equals("");
-                                sb.setLength(0);
-                                if (!MainActivity.storedPreference.equals("null")) {
-                                    scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
+                                    sb.equals("");
+                                    sb.setLength(0);
+                                    if (!MainActivity.storedPreference.equals("null")) {
+                                        scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
 
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
 
-                                        }
-                                    });
-                                } else if (!MainActivity.storedUid.equals("no id exist")) {
+                                            }
+                                        });
+                                    } else if (!MainActivity.storedUid.equals("no id exist")) {
 
-                                    scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
+                                        scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
 
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
 
 
-                                        }
-                                    });
+                                            }
+                                        });
+                                    }
+
+
                                 }
 
+                                ;
+                            }).create().show();
 
-                            }
 
-                            ;
-                        }).create().show();
+                }catch (Exception e){}
 
             }
         });
@@ -216,81 +220,89 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         holder.btCancel.setOnClickListener(v -> {
 
 
-            Map<String, Object> map = new HashMap<>();
+            try {
+                Map<String, Object> map = new HashMap<>();
 //            if (trip.getUID() != null)
 //                map.put("UID", trip.getUID());
 //            if (trip.getToken() != null)
 //                map.put("UID", trip.getToken());
 
-            map.put("alarm", trip.getAlarm());
-            map.put("date", trip.getDate());
-            map.put("endPoint", trip.getEndPoint());
-            map.put("startPoint", trip.getStartPoint());
-            map.put("tripName", trip.getTripName());
-            map.put("repeat", trip.getRepeat());
-            map.put("way", trip.getWay());
-            map.put("status", Data.CANCEL);
-            map.put("endLat", trip.getEndLat());
-            map.put("latLogEnd", trip.getLatLogEnd());
-            map.put("endLong", trip.getEndLong());
-            map.put("startLat", trip.getStartLat());
-            map.put("startLong", trip.getStartLong());
+                map.put("alarm", trip.getAlarm());
+                map.put("date", trip.getDate());
+                map.put("endPoint", trip.getEndPoint());
+                map.put("startPoint", trip.getStartPoint());
+                map.put("tripName", trip.getTripName());
+                map.put("repeat", trip.getRepeat());
+                map.put("way", trip.getWay());
+                map.put("status", Data.CANCEL);
+                map.put("endLat", trip.getEndLat());
+                map.put("latLogEnd", trip.getLatLogEnd());
+                map.put("endLong", trip.getEndLong());
+                map.put("startLat", trip.getStartLat());
+                map.put("startLong", trip.getStartLong());
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
-            builder.setTitle("Are You Sure?");
-            builder.setMessage("Cancel this Trip.");
+                AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
+                builder.setTitle("Are You Sure?");
+                builder.setMessage("Cancel this Trip.");
 
-            if (!MainActivity.storedPreference.equals("null")) {
-                builder.setPositiveButton("Yes", (dialog, which) -> {
-                    scoresReft1.child(getRef(position).getKey()).removeValue();
-                    scoresRefh1.push().setValue(map);
+                if (!MainActivity.storedPreference.equals("null")) {
+                    builder.setPositiveButton("Yes", (dialog, which) -> {
+                        scoresReft1.child(getRef(position).getKey()).removeValue();
+                        scoresRefh1.push().setValue(map);
 
-                    scoresRefc1.push().setValue(map)
-                            .addOnSuccessListener(unused ->
-                                    Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+                        scoresRefc1.push().setValue(map)
+                                .addOnSuccessListener(unused ->
+                                        Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
 
-                            });
+                                });
 
-                    DataForAlarm.deleteAlarmForOneTrip(map);
+                        DataForAlarm.deleteAlarmForOneTrip(map);
 
-                });
-                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
-                });
-                builder.show();
+                    });
+                    builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
+                    });
+                    builder.show();
 
 
-            } else if (!MainActivity.storedUid.equals("no id exist")) {
+                } else if (!MainActivity.storedUid.equals("no id exist")) {
 
-                builder.setPositiveButton("Yes", (dialog, which) -> {
-                    scoresReft2.child(getRef(position).getKey()).removeValue();
-                    scoresRefh2.push().setValue(map);
+                    builder.setPositiveButton("Yes", (dialog, which) -> {
+                        scoresReft2.child(getRef(position).getKey()).removeValue();
+                        scoresRefh2.push().setValue(map);
 
-                    scoresRefc2.push().setValue(map)
-                            .addOnSuccessListener(unused ->
-                                    Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+                        scoresRefc2.push().setValue(map)
+                                .addOnSuccessListener(unused ->
+                                        Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
 
-                            });
+                                });
 
-                    DataForAlarm.deleteAlarmForOneTrip(map);
+                        DataForAlarm.deleteAlarmForOneTrip(map);
 
-                });
-                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
-                });
-                builder.show();
+                    });
+                    builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                        Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
+                    });
+                    builder.show();
+
+
+                }
+
+            }catch (Exception e){
 
 
             }
 
 
+
         });///
 
         holder.ivNotes.setOnClickListener(v -> {
+
             // Toast.makeText(v.getContext(), "position: "+position, Toast.LENGTH_SHORT).show();
 
 
@@ -309,6 +321,9 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 
 
         holder.ivEdit.setOnClickListener(v -> {
+            try {
+
+
 //
 //
 //            Intent intent = new Intent(holder.btCancel.getContext(),AddTripActivity.class);
@@ -340,211 +355,218 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
 //            Data.startLat=trip.getStartLat();
 //            Data.startLong= trip.getStartLong();
 
-            ////////////////////////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////////////////
 
-            DialogPlus dialog = DialogPlus.newDialog(holder.ivDelete.getContext())
-                    .setContentHolder(new ViewHolder(R.layout.activity_add_trip))
-                    .setExpanded(true, 1800)
-                    .create();
-            dialog.show();
-            Calendar calendar = Calendar.getInstance();
-            final int year = calendar.get(Calendar.YEAR);
-            final int month = calendar.get(Calendar.MONTH);
-            final int day = calendar.get(Calendar.DAY_OF_MONTH);
-            final int[] t1Hour = new int[1];
-            final int[] t1Minut = new int[1];
-            View view = dialog.getHolderView();
-            EditText edEndPoint = view.findViewById(R.id.edEndPoint);
-            EditText edTripName = view.findViewById(R.id.edTripName);
-            EditText edStartPoint = view.findViewById(R.id.edStartPoint);
-            ImageView imvDate = view.findViewById(R.id.imvDate);
-            ImageView imvTime = view.findViewById(R.id.imvTime);
-            TextView tevTitle = view.findViewById(R.id.tevTitle);
-            TextView tvDate = view.findViewById(R.id.tvDate);
-            TextView tvTime = view.findViewById(R.id.tvTime);
+                DialogPlus dialog = DialogPlus.newDialog(holder.ivDelete.getContext())
+                        .setContentHolder(new ViewHolder(R.layout.activity_add_trip))
+                        .setExpanded(true, 1800)
+                        .create();
+                dialog.show();
+                Calendar calendar = Calendar.getInstance();
+                final int year = calendar.get(Calendar.YEAR);
+                final int month = calendar.get(Calendar.MONTH);
+                final int day = calendar.get(Calendar.DAY_OF_MONTH);
+                final int[] t1Hour = new int[1];
+                final int[] t1Minut = new int[1];
+                View view = dialog.getHolderView();
+                EditText edEndPoint = view.findViewById(R.id.edEndPoint);
+                EditText edTripName = view.findViewById(R.id.edTripName);
+                EditText edStartPoint = view.findViewById(R.id.edStartPoint);
+                ImageView imvDate = view.findViewById(R.id.imvDate);
+                ImageView imvTime = view.findViewById(R.id.imvTime);
+                TextView tevTitle = view.findViewById(R.id.tevTitle);
+                TextView tvDate = view.findViewById(R.id.tvDate);
+                TextView tvTime = view.findViewById(R.id.tvTime);
 
-            edStartPoint.setFocusable(false);
-            edEndPoint.setFocusable(false);
-            AutoCompleteTextView repeat = view.findViewById(R.id.repeat);
-            AutoCompleteTextView way = view.findViewById(R.id.way);
-            Button btUpdate = view.findViewById(R.id.btAdd);
+                edStartPoint.setFocusable(false);
+                edEndPoint.setFocusable(false);
+                AutoCompleteTextView repeat = view.findViewById(R.id.repeat);
+                AutoCompleteTextView way = view.findViewById(R.id.way);
+                Button btUpdate = view.findViewById(R.id.btAdd);
 
-            edStartPoint.setText(trip.getStartPoint());
-            edEndPoint.setText(trip.getEndPoint());
-            edTripName.setText(trip.getTripName());
-            tvDate.setText(trip.getDate());
-            tvTime.setText(trip.getAlarm());
-            repeat.setText(trip.getRepeat());
-            way.setText(trip.getWay());
-            ArrayAdapter<String> arrayAdapterRepeat;
-            ArrayAdapter<String> arrayAdapterWay;
-            // add list in repeat and way
-            ArrayList<String> repeatList = new ArrayList<>();
-            ArrayList<String> wayList = new ArrayList<>();
-            wayList.add(imvDate.getContext().getString(R.string.oneWay));
-            wayList.add(imvDate.getContext().getString(R.string.towWay));
-            repeatList.add(imvDate.getContext().getString(R.string.noRepeat));
-            repeatList.add(imvDate.getContext().getString(R.string.repeatDaily));
-            repeatList.add(imvDate.getContext().getString(R.string.repeatWeekly));
-            repeatList.add(imvDate.getContext().getString(R.string.repeatMonthly));
-            arrayAdapterRepeat = new ArrayAdapter(holder.txvEndPoint.getContext(), R.layout.tv_entity, repeatList);
-            repeat.setAdapter(arrayAdapterRepeat);
-            arrayAdapterWay = new ArrayAdapter(holder.tvTime.getContext(), R.layout.tv_entity, wayList);
-            way.setAdapter(arrayAdapterWay);
+                edStartPoint.setText(trip.getStartPoint());
+                edEndPoint.setText(trip.getEndPoint());
+                edTripName.setText(trip.getTripName());
+                tvDate.setText(trip.getDate());
+                tvTime.setText(trip.getAlarm());
+                repeat.setText(trip.getRepeat());
+                way.setText(trip.getWay());
+                ArrayAdapter<String> arrayAdapterRepeat;
+                ArrayAdapter<String> arrayAdapterWay;
+                // add list in repeat and way
+                ArrayList<String> repeatList = new ArrayList<>();
+                ArrayList<String> wayList = new ArrayList<>();
+                wayList.add(imvDate.getContext().getString(R.string.oneWay));
+                wayList.add(imvDate.getContext().getString(R.string.towWay));
+                repeatList.add(imvDate.getContext().getString(R.string.noRepeat));
+                repeatList.add(imvDate.getContext().getString(R.string.repeatDaily));
+                repeatList.add(imvDate.getContext().getString(R.string.repeatWeekly));
+                repeatList.add(imvDate.getContext().getString(R.string.repeatMonthly));
+                arrayAdapterRepeat = new ArrayAdapter(holder.txvEndPoint.getContext(), R.layout.tv_entity, repeatList);
+                repeat.setAdapter(arrayAdapterRepeat);
+                arrayAdapterWay = new ArrayAdapter(holder.tvTime.getContext(), R.layout.tv_entity, wayList);
+                way.setAdapter(arrayAdapterWay);
 
-            //update title and button text
-            tevTitle.setText(R.string.update_trip);
-            btUpdate.setText(R.string.update_trip);
+                //update title and button text
+                tevTitle.setText(R.string.update_trip);
+                btUpdate.setText(R.string.update_trip);
 
-            way.setFocusable(false);
-            repeat.setFocusable(false);
-            //show timeDialog
-            imvTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TimePickerDialog timePickerDialog = new TimePickerDialog(holder.tvTime.getContext(), new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            t1Hour[0] = hourOfDay;
-                            t1Minut[0] = minute;
+                way.setFocusable(false);
+                repeat.setFocusable(false);
+                //show timeDialog
+                imvTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(holder.tvTime.getContext(), new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                t1Hour[0] = hourOfDay;
+                                t1Minut[0] = minute;
 
-                            calendar.set(0, 0, 0, t1Hour[0], t1Minut[0]);
-                            tvTime.setText(DateFormat.format("hh:mm aa", calendar));
+                                calendar.set(0, 0, 0, t1Hour[0], t1Minut[0]);
+                                tvTime.setText(DateFormat.format("hh:mm aa", calendar));
+
+                            }
+                        }, 12, 0, false);
+                        timePickerDialog.updateTime(t1Hour[0], t1Minut[0]);
+                        timePickerDialog.show();
+                    }
+                });
+                imvDate.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(holder.tvTime.getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth
+                                , AddTripActivity.listenerDate, year, month, day);
+                        datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        datePickerDialog.show();
+                    }
+                });
+                AddTripActivity.listenerDate = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        month = month + 1;
+                        String date = dayOfMonth + "/" + month + "/" + year;
+                        tvDate.setText(date);
+                    }
+                };
+                btUpdate.setOnClickListener(v1 -> {
+
+                    if (screen == 1) {
+                        Map<String, Object> map = new HashMap<>();
+
+                        map.put("alarm", tvTime.getText().toString());
+                        map.put("date", tvDate.getText().toString());
+                        map.put("endPoint", edEndPoint.getText().toString());
+                        map.put("startPoint", edStartPoint.getText().toString());
+                        map.put("tripName", edTripName.getText().toString());
+                        map.put("repeat", repeat.getText().toString());
+                        map.put("way", way.getText().toString());
+                        map.put("status", Data.UPCOMING);
+                        if (!MainActivity.storedPreference.equals("null")) {///
+                            scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+
+                                }
+                            });
+                            deleteAndFillAlarm();
+
+                        } else if (!MainActivity.storedUid.equals("no id exist")) {
+
+                            scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+
+                                }
+                            });
+                            deleteAndFillAlarm();
 
                         }
-                    }, 12, 0, false);
-                    timePickerDialog.updateTime(t1Hour[0], t1Minut[0]);
-                    timePickerDialog.show();
-                }
-            });
-            imvDate.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
 
 
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(holder.tvTime.getContext(), android.R.style.Theme_Holo_Light_Dialog_MinWidth
-                            , AddTripActivity.listenerDate, year, month, day);
-                    datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    datePickerDialog.show();
-                }
-            });
-            AddTripActivity.listenerDate = new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                    month = month + 1;
-                    String date = dayOfMonth + "/" + month + "/" + year;
-                    tvDate.setText(date);
-                }
-            };
-            btUpdate.setOnClickListener(v1 -> {
+                    } else if (screen == 2) {///
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("alarm", tvTime.getText().toString());
+                        map.put("date", tvDate.getText().toString());
+                        map.put("endPoint", edEndPoint.getText().toString());
+                        map.put("startPoint", edStartPoint.getText().toString());
+                        map.put("tripName", edTripName.getText().toString());
+                        map.put("repeat", repeat.getText().toString());
+                        map.put("way", way.getText().toString());
+                        map.put("status", Data.CANCEL);
+                        if (!MainActivity.storedPreference.equals("null")) {
+                            scoresRefh1.push().setValue(map);
 
-                if (screen == 1) {
-                    Map<String, Object> map = new HashMap<>();
 
-                    map.put("alarm", tvTime.getText().toString());
-                    map.put("date", tvDate.getText().toString());
-                    map.put("endPoint", edEndPoint.getText().toString());
-                    map.put("startPoint", edStartPoint.getText().toString());
-                    map.put("tripName", edTripName.getText().toString());
-                    map.put("repeat", repeat.getText().toString());
-                    map.put("way", way.getText().toString());
-                    map.put("status", Data.UPCOMING);
-                    if (!MainActivity.storedPreference.equals("null")) {///
-                        scoresReft1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
+                            scoresRefc1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
 
-                            }
-                        });
-                        deleteAndFillAlarm();
+                                }
+                            });
+                            deleteAndFillAlarm();
 
-                    } else if (!MainActivity.storedUid.equals("no id exist")) {
+                        }////
+                        else if (!MainActivity.storedUid.equals("no id exist")) {
+                            scoresRefh2.push().setValue(map);
 
-                        scoresReft2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
 
-                            }
-                        });
-                        deleteAndFillAlarm();
+                            scoresRefc2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+
+                                }
+                            });
+
+                            deleteAndFillAlarm();
+
+                        }
 
                     }
 
-
-                } else if (screen == 2) {///
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("alarm", tvTime.getText().toString());
-                    map.put("date", tvDate.getText().toString());
-                    map.put("endPoint", edEndPoint.getText().toString());
-                    map.put("startPoint", edStartPoint.getText().toString());
-                    map.put("tripName", edTripName.getText().toString());
-                    map.put("repeat", repeat.getText().toString());
-                    map.put("way", way.getText().toString());
-                    map.put("status", Data.CANCEL);
-                    if (!MainActivity.storedPreference.equals("null")) {
-                        scoresRefh1.push().setValue(map);
+                });
 
 
-                        scoresRefc1.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-
-                            }
-                        });
-                        deleteAndFillAlarm();
-
-                    }////
-                    else if (!MainActivity.storedUid.equals("no id exist")) {
-                        scoresRefh2.push().setValue(map);
+            }catch (Exception e){
 
 
-                        scoresRefc2.child(getRef(position).getKey()).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(holder.tvTime.getContext(), "data Updated", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(holder.tvTime.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
+            }
 
-                            }
-                        });
-
-                        deleteAndFillAlarm();
-
-                    }
-
-                }
-
-            });
 
 
         });
@@ -552,136 +574,173 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
-                builder.setTitle("Are You Sure?");
-                builder.setMessage("Delete data cant be Undo.");
-                builder.setPositiveButton("Delete", (dialog, which) -> {
-                    if (!MainActivity.storedPreference.equals("null")) {
-                        if (screen == 1) {
-                            scoresReft1.child(getRef(position).getKey()).removeValue();
-                            deleteAndFillAlarm();
-                        } else if (screen == 2) {
-                            scoresRefc1.child(getRef(position).getKey()).removeValue();
+
+                try {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(holder.txvEndPoint.getContext());
+                    builder.setTitle("Are You Sure?");
+                    builder.setMessage("Delete data cant be Undo.");
+                    builder.setPositiveButton("Delete", (dialog, which) -> {
+                        if (!MainActivity.storedPreference.equals("null")) {
+                            if (screen == 1) {
+                                scoresReft1.child(getRef(position).getKey()).removeValue();
+                                deleteAndFillAlarm();
+                            } else if (screen == 2) {
+                                scoresRefc1.child(getRef(position).getKey()).removeValue();
 
 
-                        } else if (screen == 3) {
-                            scoresRefh1.child(getRef(position).getKey()).removeValue();
+                            } else if (screen == 3) {
+                                scoresRefh1.child(getRef(position).getKey()).removeValue();
 
+
+                            }
+                        } else if (!MainActivity.storedUid.equals("no id exist")) {
+
+                            if (screen == 1) {
+                                scoresReft2.child(getRef(position).getKey()).removeValue();
+                                deleteAndFillAlarm();
+
+                            } else if (screen == 2) {
+                                scoresRefc2.child(getRef(position).getKey()).removeValue();
+
+
+                            } else if (screen == 3) {
+                                scoresRefh2.child(getRef(position).getKey()).removeValue();
+
+
+                            }
 
                         }
-                    } else if (!MainActivity.storedUid.equals("no id exist")) {
 
-                        if (screen == 1) {
-                            scoresReft2.child(getRef(position).getKey()).removeValue();
-                            deleteAndFillAlarm();
-
-                        } else if (screen == 2) {
-                            scoresRefc2.child(getRef(position).getKey()).removeValue();
+                    });
+                    builder.setNegativeButton("Cancel", (dialog, which) -> {
+                        Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
+                    });
+                    builder.show();
 
 
-                        } else if (screen == 3) {
-                            scoresRefh2.child(getRef(position).getKey()).removeValue();
+                }catch (Exception e){
+
+                }
 
 
-                        }
 
-                    }
-
-                });
-                builder.setNegativeButton("Cancel", (dialog, which) -> {
-                    Toast.makeText(holder.tvTime.getContext(), "Cancelled.", Toast.LENGTH_SHORT).show();
-                });
-                builder.show();
             }
+
+
 
         });
         holder.btStart.setOnClickListener(v -> {
+            try {
+
+                DialogPlus dialog = DialogPlus.newDialog(holder.ivDelete.getContext())
+                        .setContentHolder(new ViewHolder(R.layout.map_transportation))
+                        .setExpanded(true, 1200)
+                        .create();
+                dialog.show();
+                View view = dialog.getHolderView();
+                TextView tvBicycle = view.findViewById(R.id.tvBicycle);
+                TextView tvBus = view.findViewById(R.id.tvBus);
+                TextView tvWalk = view.findViewById(R.id.tvWalk);
+                TextView tvTwoWheeler = view.findViewById(R.id.tvTwoWheeler);
 
 
-            DialogPlus dialog = DialogPlus.newDialog(holder.ivDelete.getContext())
-                    .setContentHolder(new ViewHolder(R.layout.map_transportation))
-                    .setExpanded(true, 1200)
-                    .create();
-            dialog.show();
-            View view = dialog.getHolderView();
-            TextView tvBicycle = view.findViewById(R.id.tvBicycle);
-            TextView tvBus = view.findViewById(R.id.tvBus);
-            TextView tvWalk = view.findViewById(R.id.tvWalk);
-            TextView tvTwoWheeler = view.findViewById(R.id.tvTwoWheeler);
+                String lat = trip.getEndPoint();
+                tvBicycle.setOnClickListener(m -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + lat + "&mode=b"));
+                    intent.setPackage("com.google.android.apps.maps");
+
+                    if (intent.resolveActivity(tvBicycle.getContext().getPackageManager()) != null) {
+                        tvBicycle.getContext().startActivity(intent);
+                        dialog.dismiss();
+                    }
+                });
+                tvBus.setOnClickListener(m -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + lat + "&mode=d"));
+                    intent.setPackage("com.google.android.apps.maps");
+
+                    if (intent.resolveActivity(tvBicycle.getContext().getPackageManager()) != null) {
+                        tvBicycle.getContext().startActivity(intent);
+                        dialog.dismiss();
+
+                    }
+                });
+                tvWalk.setOnClickListener(m -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + lat + "&mode=w"));
+                    intent.setPackage("com.google.android.apps.maps");
+
+                    if (intent.resolveActivity(tvBicycle.getContext().getPackageManager()) != null) {
+                        tvBicycle.getContext().startActivity(intent);
+                        dialog.dismiss();
+
+                    }
+                });
+                tvTwoWheeler.setOnClickListener(m -> {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + lat + "&mode=l"));
+                    intent.setPackage("com.google.android.apps.maps");
+
+                    if (intent.resolveActivity(tvBicycle.getContext().getPackageManager()) != null) {
+                        tvBicycle.getContext().startActivity(intent);
+                        dialog.dismiss();
 
 
-            String lat = trip.getEndPoint();
-            tvBicycle.setOnClickListener(m -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + lat + "&mode=b"));
-                intent.setPackage("com.google.android.apps.maps");
+                    }
+                });
 
-                if (intent.resolveActivity(tvBicycle.getContext().getPackageManager()) != null) {
-                    tvBicycle.getContext().startActivity(intent);
-                    dialog.dismiss();
-                }
-            });
-            tvBus.setOnClickListener(m -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + lat + "&mode=d"));
-                intent.setPackage("com.google.android.apps.maps");
+                Map<String, Object> map = new HashMap<>();
+                map.put("alarm", trip.getAlarm());
+                map.put("date", trip.getDate());
+                map.put("endPoint", trip.getEndPoint());
+                map.put("startPoint", trip.getStartPoint());
+                map.put("tripName", trip.getTripName());
+                map.put("repeat", trip.getRepeat());
+                map.put("way", trip.getWay());
+                map.put("status", Data.DONE);
+                map.put("endLat", trip.getEndLat());
+                map.put("latLogEnd", trip.getLatLogEnd());
+                map.put("endLong", trip.getEndLong());
+                map.put("startLat", trip.getStartLat());
+                map.put("startLong", trip.getStartLong());
 
-                if (intent.resolveActivity(tvBicycle.getContext().getPackageManager()) != null) {
-                    tvBicycle.getContext().startActivity(intent);
-                    dialog.dismiss();
+                if (!MainActivity.storedPreference.equals("null")) {
+                    if (screen == 1) {
+                        scoresReft1.child(getRef(position).getKey()).removeValue();
+                        DataForAlarm.deleteAlarmForOneTrip(map);
 
-                }
-            });
-            tvWalk.setOnClickListener(m -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + lat + "&mode=w"));
-                intent.setPackage("com.google.android.apps.maps");
-
-                if (intent.resolveActivity(tvBicycle.getContext().getPackageManager()) != null) {
-                    tvBicycle.getContext().startActivity(intent);
-                    dialog.dismiss();
-
-                }
-            });
-            tvTwoWheeler.setOnClickListener(m -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + lat + "&mode=l"));
-                intent.setPackage("com.google.android.apps.maps");
-
-                if (intent.resolveActivity(tvBicycle.getContext().getPackageManager()) != null) {
-                    tvBicycle.getContext().startActivity(intent);
-                    dialog.dismiss();
+                    } else if (screen == 2) {
+                        scoresRefc1.child(getRef(position).getKey()).removeValue();
 
 
-                }
-            });
+                        scoresRefh1.push().setValue(map)
+                                .addOnSuccessListener(unused ->
+                                        Toast.makeText(holder.txvEndPoint.getContext(), "Trip Done is Successfully.", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+                                });
 
-            Map<String, Object> map = new HashMap<>();
-            map.put("alarm", trip.getAlarm());
-            map.put("date", trip.getDate());
-            map.put("endPoint", trip.getEndPoint());
-            map.put("startPoint", trip.getStartPoint());
-            map.put("tripName", trip.getTripName());
-            map.put("repeat", trip.getRepeat());
-            map.put("way", trip.getWay());
-            map.put("status", Data.DONE);
-            map.put("endLat", trip.getEndLat());
-            map.put("latLogEnd", trip.getLatLogEnd());
-            map.put("endLong", trip.getEndLong());
-            map.put("startLat", trip.getStartLat());
-            map.put("startLong", trip.getStartLong());
+                        FloatingBubblePermissions.startPermissionRequest((Activity) holder.btStart.getContext());
+                        Intent intent = new Intent(getApplicationContext(), SimpleService.class);
+                        intent.putExtra("note", trip.getNotes());
+                        getApplicationContext().startService(intent);
 
-            if (!MainActivity.storedPreference.equals("null")) {
-                if (screen == 1) {
-                    scoresReft1.child(getRef(position).getKey()).removeValue();
-                    DataForAlarm.deleteAlarmForOneTrip(map);
-
-                } else if (screen == 2) {
-                    scoresRefc1.child(getRef(position).getKey()).removeValue();
+                    }
+                } else if (!MainActivity.storedUid.equals("no id exist")) {
 
 
-                    scoresRefh1.push().setValue(map)
+                    if (screen == 1) {
+                        scoresReft2.child(getRef(position).getKey()).removeValue();
+                        DataForAlarm.deleteAlarmForOneTrip(map);
+
+                    } else if (screen == 2) {
+                        scoresRefc2.child(getRef(position).getKey()).removeValue();
+                    }
+                    scoresRefh2.push().setValue(map)
                             .addOnSuccessListener(unused ->
-                                    Toast.makeText(holder.txvEndPoint.getContext(), "Trip Done is Successfully.", Toast.LENGTH_SHORT).show())
+                                    Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
                             .addOnFailureListener(e -> {
                                 Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
+
                             });
+
 
                     FloatingBubblePermissions.startPermissionRequest((Activity) holder.btStart.getContext());
                     Intent intent = new Intent(getApplicationContext(), SimpleService.class);
@@ -689,32 +748,13 @@ public class AddAdapter extends FirebaseRecyclerAdapter<Trip, AddAdapter.MyViewH
                     getApplicationContext().startService(intent);
 
                 }
-            } else if (!MainActivity.storedUid.equals("no id exist")) {
+                Toast.makeText(holder.txvEndPoint.getContext(), "Done while Cancel", Toast.LENGTH_SHORT).show();
 
 
-                if (screen == 1) {
-                    scoresReft2.child(getRef(position).getKey()).removeValue();
-                    DataForAlarm.deleteAlarmForOneTrip(map);
-
-                } else if (screen == 2) {
-                    scoresRefc2.child(getRef(position).getKey()).removeValue();
-                }
-                scoresRefh2.push().setValue(map)
-                        .addOnSuccessListener(unused ->
-                                Toast.makeText(holder.txvEndPoint.getContext(), "Trip Cancel is Successfully.", Toast.LENGTH_SHORT).show())
-                        .addOnFailureListener(e -> {
-                            Toast.makeText(holder.txvEndPoint.getContext(), "Error while Cancel", Toast.LENGTH_SHORT).show();
-
-                        });
-
-
-                FloatingBubblePermissions.startPermissionRequest((Activity) holder.btStart.getContext());
-                Intent intent = new Intent(getApplicationContext(), SimpleService.class);
-                intent.putExtra("note", trip.getNotes());
-                getApplicationContext().startService(intent);
+            }catch (Exception e){
 
             }
-            Toast.makeText(holder.txvEndPoint.getContext(), "Done while Cancel", Toast.LENGTH_SHORT).show();
+
 
         });
     }
