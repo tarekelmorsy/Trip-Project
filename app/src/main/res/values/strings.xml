@@ -16,7 +16,7 @@
     <string name="oneWay">One Way</string>
     <string name="towWay">Two Way</string>
     <string name="upComing">Up Coming</string>
-    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_maps">Trips</string>
     <string name="title_activity_home2">Home2</string>
     <string name="title_activity_test">Test</string>
     <string name="update_trip">Update Trip</string>

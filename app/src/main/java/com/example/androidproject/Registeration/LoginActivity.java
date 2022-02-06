@@ -252,7 +252,7 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
 
 
-            Toast.makeText(this, "user is " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this, "user is " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
 
 
         }
@@ -282,7 +282,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             Toast.makeText(LoginActivity.this, "verified account ", Toast.LENGTH_LONG).show();
                             Log.i(TAG, "onComplete: uidxx"+Data.FIREBASEAUTH.getCurrentUser().getUid());
-                            Toast.makeText(LoginActivity.this, "verified account "+Data.FIREBASEAUTH.getCurrentUser().getUid(), Toast.LENGTH_LONG).show();
+                          //  Toast.makeText(LoginActivity.this, "verified account "+Data.FIREBASEAUTH.getCurrentUser().getUid(), Toast.LENGTH_LONG).show();
 
                             SharedPreferences preferences2 = getSharedPreferences("c", Context.MODE_PRIVATE);
                             preferences2.edit().putString("id", Data.FIREBASEAUTH.getCurrentUser().getUid()).apply();

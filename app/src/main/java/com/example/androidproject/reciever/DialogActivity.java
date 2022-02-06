@@ -143,7 +143,7 @@ public class DialogActivity extends AppCompatActivity {
         NotificationCompat.Builder notifyBuilder = new NotificationCompat.Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle("TRIP REMINDER")
                 .setContentText("Start Now !")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_trip)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
